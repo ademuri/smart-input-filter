@@ -6,16 +6,26 @@ void Filter::Run() {
   }
 }
 
+#ifndef ARDUINO
+void Filter::SetMillis(uint32_t value) {
+  fake_millis = value;
+}
+
+void Filter::SetPin(uint8_t pin, uint8_t value) {
+  pins[pin] = value;
+}
+#endif
+
 void Filter::SetRunDelayInMillis(uint32_t delay) {
   run_at = millis() + delay;
 }
 
 #ifndef ARDUINO
 uint32_t Filter::millis() {
-  return 0;
+  return fake_millis;
 }
 
 uint8_t Filter::digitalRead(uint8_t pin) {
-  return 0;
+  return pins[pin];
 }
 #endif
