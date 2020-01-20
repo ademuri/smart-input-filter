@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/adam/work/arduino-input-filter/build",
+  "command": "/usr/bin/c++   -isystem /home/adam/work/arduino-input-filter/build/googletest-src/googlemock/include -isystem /home/adam/work/arduino-input-filter/build/googletest-src/googlemock -isystem /home/adam/work/arduino-input-filter/build/googletest-src/googletest/include -isystem /home/adam/work/arduino-input-filter/build/googletest-src/googletest   -Wall -Wextra -pedantic -std=c++11 -g   -o CMakeFiles/filtertest.dir/test/debounce-input-test.cc.o -c /home/adam/work/arduino-input-filter/test/debounce-input-test.cc",
+  "file": "/home/adam/work/arduino-input-filter/test/debounce-input-test.cc"
+},
+{
+  "directory": "/home/adam/work/arduino-input-filter/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -pedantic -std=c++11 -g   -o CMakeFiles/filter.dir/src/debounce-input.cc.o -c /home/adam/work/arduino-input-filter/src/debounce-input.cc",
+  "file": "/home/adam/work/arduino-input-filter/src/debounce-input.cc"
+},
+{
+  "directory": "/home/adam/work/arduino-input-filter/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -pedantic -std=c++11 -g   -o CMakeFiles/filter.dir/src/filter.cc.o -c /home/adam/work/arduino-input-filter/src/filter.cc",
+  "file": "/home/adam/work/arduino-input-filter/src/filter.cc"
+}
+]
