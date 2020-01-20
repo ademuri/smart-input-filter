@@ -1,6 +1,8 @@
-# Arduino Input Filter library
+# Smart Input Filter
 
 ## Building
+
+To check that all code builds for Arduino, run `build_arduino.sh`. To run the unit tests, run `test.sh`.
 
 ### Requirements
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(arduino-input-filter LANGUAGES CXX)
+project(smart-input-filter LANGUAGES CXX)
 
 # Download GoogleTest for mocks and test runner.
 include(DownloadProject.cmake)
