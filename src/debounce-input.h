@@ -9,22 +9,22 @@
  * latency).
  */
 class DebounceInput : public Filter {
-  public:
-    DebounceInput(uint16_t pin);
+ public:
+  DebounceInput(uint16_t pin);
 
-    bool GetCurrentState();
+  bool GetCurrentState();
 
-  protected:
-    void DoRun() override;
+ protected:
+  void DoRun() override;
 
-  private:
-    bool stable_state = false;
-    bool current_state = false;
-    uint32_t state_started_at_millis = 0;
-    uint32_t last_successful_change_at_millis = 0;
+ private:
+  bool stable_state = false;
+  bool current_state = false;
+  uint32_t state_started_at_millis = 0;
+  uint32_t last_successful_change_at_millis = 0;
 
-    const uint16_t pin;
-    const uint16_t kDebounceTimeMillis = 10;
+  const uint16_t pin;
+  const uint16_t kDebounceTimeMillis = 10;
 };
 
 #endif

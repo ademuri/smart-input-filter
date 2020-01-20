@@ -2,9 +2,7 @@
 
 DebounceInput::DebounceInput(uint16_t pin) : pin(pin) {}
 
-bool DebounceInput::GetCurrentState() {
-  return stable_state;
-}
+bool DebounceInput::GetCurrentState() { return stable_state; }
 
 void DebounceInput::DoRun() {
   if (millis() - state_started_at_millis >= kDebounceTimeMillis) {
