@@ -40,5 +40,7 @@ install:
     - pip install -U platformio
     - platformio update
 
-script:
-    - ./build_arduino.sh
+jobs:
+  include:
+    - script: ./build_arduino.sh
+    - script: ./test.sh
