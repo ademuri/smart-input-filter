@@ -12,7 +12,14 @@ class DebounceInput : public Filter {
  public:
   DebounceInput(uint16_t pin);
 
+  /* Gets the current debounced state. */
   bool GetCurrentState();
+
+  /* Whether the input rose this cycle. Reset on the next call to Run. */
+  bool Rose();
+
+  /* Whether the input fell this cycle. Reset on the next call to Run. */
+  bool Fell();
 
  protected:
   void DoRun() override;
@@ -20,6 +27,8 @@ class DebounceInput : public Filter {
  private:
   bool stable_state = false;
   bool current_state = false;
+  bool rose = false;
+  bool fell = false;
   uint32_t state_started_at_millis = 0;
   uint32_t last_successful_change_at_millis = 0;
 
