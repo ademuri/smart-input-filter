@@ -1,7 +1,9 @@
 #ifndef ARDUINO_INPUT_FILTER_FILTER
 #define ARDUINO_INPUT_FILTER_FILTER
 
-#ifndef ARDUINO
+#ifdef ARDUINO
+#include <Arduino.h>
+#else
 #include <cstdint>
 #include <vector>
 #endif

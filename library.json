@@ -1,0 +1,10 @@
+{
+  "name": "arduino-filter-library",
+  "version": "0.0.1",
+  "keywords": "arduino, filter",
+  "description": "some filters",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ademuri/arduino-input-filter.git"
+  }
+}
