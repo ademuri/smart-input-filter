@@ -16,6 +16,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++11 -g")
 
 # Generate the file needed for YCM integration
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
+IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
+  EXECUTE_PROCESS( COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json
+  )
+ENDIF()
 
 file(GLOB LIBRARY_SOURCES "src/*.cc")
 add_library(filter ${LIBRARY_SOURCES})
@@ -32,4 +38,3 @@ add_executable(filtertest ${TEST_SOURCES})
 
 target_link_libraries(filtertest filter gmock_main gtest)
 add_test(filtertest filtertest)
-
