@@ -1,12 +1,14 @@
 #include "debounce-input.h"
 
-DebounceInput::DebounceInput(uint16_t pin) : pin(pin) {}
+DebounceInput::DebounceInput(uint32_t pin) : pin(pin) {}
 
 bool DebounceInput::GetCurrentState() { return stable_state; }
 
 bool DebounceInput::Rose() { return rose; }
 
 bool DebounceInput::Fell() { return fell; }
+
+int DebounceInput::GetRawValue() { return digitalRead(pin); }
 
 void DebounceInput::DoRun() {
   rose = false;
@@ -25,7 +27,7 @@ void DebounceInput::DoRun() {
     }
   }
 
-  bool input_value = digitalRead(pin);
+  bool input_value = GetRawValue();
   if (input_value == current_state) {
     return;
   }
@@ -49,3 +51,12 @@ void DebounceInput::DoRun() {
   state_started_at_millis = millis();
   current_state = input_value;
 }
+
+#ifndef ARDUINO
+void DebounceInput::SetPinValue(int value) { pin_value = value; }
+
+int DebounceInput::digitalRead(uint32_t pin) {
+  (void)pin;
+  return pin_value;
+}
+#endif

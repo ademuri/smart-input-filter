@@ -23,7 +23,7 @@ void RunDataTest(DebounceInput* input, std::vector<InputOutput> data) {
       debug_stream << "millis: " << millis;
 
       input->SetMillis(millis);
-      input->SetPin(0, point.pin);
+      input->SetPinValue(point.pin);
       input->Run();
       EXPECT_EQ(input->GetCurrentState(), point.output) << debug_stream.str();
 
