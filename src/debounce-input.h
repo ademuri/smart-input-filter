@@ -27,7 +27,8 @@ class DebounceInput : public Filter<int> {
 
  protected:
   void DoRun() override;
-  int GetRawValue() override;
+  int ReadFromSensor() override;
+  void LogState() override;
 
  private:
   bool stable_state = false;

@@ -23,7 +23,7 @@ IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
   )
 ENDIF()
 
-file(GLOB LIBRARY_SOURCES "src/*.cc")
+file(GLOB LIBRARY_SOURCES "src/*.cpp")
 add_library(filter ${LIBRARY_SOURCES})
 
 target_include_directories(filter PUBLIC
@@ -32,7 +32,7 @@ target_include_directories(filter PUBLIC
 
 enable_testing()
 
-file(GLOB TEST_SOURCES "test/*.cc")
+file(GLOB TEST_SOURCES "test/*.cpp")
 
 add_executable(filtertest ${TEST_SOURCES})
 

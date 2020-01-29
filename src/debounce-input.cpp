@@ -8,7 +8,13 @@ bool DebounceInput::Rose() { return rose; }
 
 bool DebounceInput::Fell() { return fell; }
 
-int DebounceInput::GetRawValue() { return digitalRead(pin); }
+int DebounceInput::ReadFromSensor() { return digitalRead(pin); }
+
+void DebounceInput::LogState() {
+  Serial.print(current_state);
+  Serial.print(" ");
+  Serial.println(stable_state);
+}
 
 void DebounceInput::DoRun() {
   rose = false;
@@ -27,7 +33,7 @@ void DebounceInput::DoRun() {
     }
   }
 
-  bool input_value = GetRawValue();
+  bool input_value = ReadFromSensor();
   if (input_value == current_state) {
     return;
   }
