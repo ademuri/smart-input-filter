@@ -8,9 +8,12 @@
 #include <vector>
 #endif
 
+/* T is the input type (e.g. int for digitalRead, uint32_t for analogRead) */
 template <typename T>
 class Filter {
  public:
+  /* Run one iteration of the filter. Call this periodically to read the sensor
+   * and run the filtering logic. */
   void Run();
 
 #ifndef ARDUINO
@@ -18,10 +21,13 @@ class Filter {
 #endif
 
  protected:
-  virtual void DoRun() = 0;
-
   void SetRunDelayInMillis(uint32_t delay);
 
+  /* Perform the filtering logic. Override this. */
+  virtual void DoRun() = 0;
+
+  /* Gets the raw value of the sensor. Override this to hook up to a physical
+   * sensor. */
   virtual T GetRawValue() = 0;
 
 #ifndef ARDUINO
