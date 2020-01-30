@@ -20,5 +20,5 @@ void loop() {
     Serial.println("You released a button!");
   }
 
-  digitalWrite(kLedPin, button->GetCurrentState());
+  digitalWrite(kLedPin, button->GetFilteredValue());
 }

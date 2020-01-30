@@ -12,7 +12,7 @@ struct InputOutput {
   uint32_t upper_bound;
 };
 
-void RunDataTest(ExponentialMovingAverageInput* input, std::vector<InputOutput> data) {
+void RunDataTest(ExponentialMovingAverageInput<uint32_t>* input, std::vector<InputOutput> data) {
   uint32_t millis = 0;
   for (auto point : data) {
     for (uint32_t i = 0; i < point.duration_millis; i++) {
@@ -32,7 +32,7 @@ void RunDataTest(ExponentialMovingAverageInput* input, std::vector<InputOutput> 
 }
 
 TEST(ExponentialMovingAverageInput, alpha_half) {
-  ExponentialMovingAverageInput *input = new ExponentialMovingAverageInput(0, 128);
+  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 128);
   std::vector<InputOutput> data = {
     {0, 10, 0, 0},
     {1024, 100, 4, 1024},
@@ -44,7 +44,7 @@ TEST(ExponentialMovingAverageInput, alpha_half) {
 }
 
 TEST(ExponentialMovingAverageInput, alpha_full) {
-  ExponentialMovingAverageInput *input = new ExponentialMovingAverageInput(0, 255);
+  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 255);
   std::vector<InputOutput> data = {
     {0, 10, 0, 0},
     {1024, 100, 1024, 1024},
@@ -54,7 +54,7 @@ TEST(ExponentialMovingAverageInput, alpha_full) {
 }
 
 TEST(ExponentialMovingAverageInput, alpha_low) {
-  ExponentialMovingAverageInput *input = new ExponentialMovingAverageInput(0, 0);
+  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 0);
   std::vector<InputOutput> data = {
     {0, 10, 0, 0},
     {1024, 10, 4, 50},
@@ -68,7 +68,7 @@ TEST(ExponentialMovingAverageInput, alpha_low) {
 }
 
 TEST(ExponentialMovingAverageInput, impulse) {
-  ExponentialMovingAverageInput *input = new ExponentialMovingAverageInput(0, 127);
+  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 127);
   std::vector<InputOutput> data = {
     {0, 10, 0, 0},
     {1024, 1, 512, 512},

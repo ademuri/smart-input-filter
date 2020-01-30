@@ -9,8 +9,10 @@
 #include <vector>
 #endif
 
-/* I is the input type (e.g. int for digitalRead, uint32_t for analogRead) */
-template <typename I>
+/* I is the input type (e.g. int for digitalRead, uint32_t for analogRead). O is
+ * the output type. The filter converts from the input type to the output type
+ * (with the default being no conversion). */
+template <typename I, typename O>
 class Filter {
  public:
   /* Run one iteration of the filter. Call this periodically to read the sensor
@@ -18,6 +20,8 @@ class Filter {
   void Run();
 
   void SetLogToSerial(bool log);
+
+  I GetFilteredValue();
 
 #ifndef ARDUINO
   void SetMillis(uint32_t value);
@@ -29,7 +33,7 @@ class Filter {
   void SetRunDelayInMillis(uint32_t delay);
 
   /* Perform the filtering logic. Override this. */
-  virtual void DoRun() = 0;
+  virtual I DoRun() = 0;
 
   /* Gets the raw value of the sensor. Override this to hook up to a physical
    * sensor. */
@@ -37,7 +41,9 @@ class Filter {
 
   /* Prints debugging information to the serial console (e.g. unfiltered and
    * filtered value). Override this. */
-  virtual void LogState() = 0;
+  virtual void LogState();
+
+  O (*Convert)(I input);
 
   /* Current cached value of the sensor. Set in Run. Used so that each
    * iteration of Run only reads from the sensor once. */
@@ -50,6 +56,7 @@ class Filter {
 #endif
 
  private:
+  I filtered_value = 0;
   uint32_t run_at = 0;
   bool log_to_serial = false;
 
@@ -57,43 +64,6 @@ class Filter {
   uint32_t fake_millis = 0;
 #endif
 };
-
-template <class I>
-void Filter<I>::Run() {
-  if (millis() >= run_at) {
-    sensor_value = ReadFromSensor();
-    DoRun();
-    if (log_to_serial) {
-      LogState();
-    }
-  }
-}
-
-template <class I>
-void Filter<I>::SetLogToSerial(bool log) {
-  log_to_serial = log;
-}
-
-template <class I>
-void Filter<I>::SetRunDelayInMillis(uint32_t delay) {
-  run_at = millis() + delay;
-}
-
-#ifndef ARDUINO
-template <class I>
-void Filter<I>::SetMillis(uint32_t value) {
-  fake_millis = value;
-}
-
-template <class I>
-void Filter<I>::SetPinValue(I value) {
-  pin_value = value;
-}
-
-template <class I>
-uint32_t Filter<I>::millis() {
-  return fake_millis;
-}
 
 class SerialClass {
  public:
@@ -108,6 +78,55 @@ class SerialClass {
   }
 };
 extern SerialClass Serial;
+
+template <typename I, typename O>
+void Filter<I, O>::Run() {
+  if (millis() >= run_at) {
+    sensor_value = ReadFromSensor();
+    filtered_value = DoRun();
+    if (log_to_serial) {
+      LogState();
+    }
+  }
+}
+
+template <typename I, typename O>
+void Filter<I, O>::SetLogToSerial(bool log) {
+  log_to_serial = log;
+}
+
+template <typename I, typename O>
+I Filter<I, O>::GetFilteredValue() {
+  return filtered_value;
+}
+
+template <typename I, typename O>
+void Filter<I, O>::SetRunDelayInMillis(uint32_t delay) {
+  run_at = millis() + delay;
+}
+
+template <typename I, typename O>
+void Filter<I, O>::LogState() {
+  Serial.print(sensor_value);
+  Serial.print(" ");
+  Serial.println(filtered_value);
+}
+
+#ifndef ARDUINO
+template <typename I, typename O>
+void Filter<I, O>::SetMillis(uint32_t value) {
+  fake_millis = value;
+}
+
+template <typename I, typename O>
+void Filter<I, O>::SetPinValue(I value) {
+  pin_value = value;
+}
+
+template <typename I, typename O>
+uint32_t Filter<I, O>::millis() {
+  return fake_millis;
+}
 
 #endif
 

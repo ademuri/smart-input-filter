@@ -27,7 +27,7 @@ void RunDataTest(DebounceInput* input, std::vector<InputOutput> &data) {
       input->SetMillis(millis);
       input->SetPinValue(point.pin);
       input->Run();
-      EXPECT_EQ(input->GetCurrentState(), point.output) << debug_stream.str();
+      EXPECT_EQ(input->GetFilteredValue(), point.output) << debug_stream.str();
 
       switch (point.state_change) {
         case StateChange::kNone:

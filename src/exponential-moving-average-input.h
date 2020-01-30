@@ -3,13 +3,16 @@
 
 #include "analog-filter.h"
 
-class ExponentialMovingAverageInput : public AnalogFilter {
+template <typename O>
+class ExponentialMovingAverageInput : public AnalogFilter<O> {
+  using Filter<uint32_t, O>::sensor_value;
+
  public:
   ExponentialMovingAverageInput(uint32_t pin, uint8_t alpha);
   uint32_t GetFilteredValue();
 
  protected:
-  void DoRun() override;
+  uint32_t DoRun() override;
 
   void LogState() override;
 
@@ -18,5 +21,36 @@ class ExponentialMovingAverageInput : public AnalogFilter {
 
   const uint8_t alpha;
 };
+
+template <typename O>
+ExponentialMovingAverageInput<O>::ExponentialMovingAverageInput(uint32_t pin,
+                                                                uint8_t alpha)
+    : AnalogFilter<O>(pin), alpha(alpha) {}
+
+template <typename O>
+uint32_t ExponentialMovingAverageInput<O>::GetFilteredValue() {
+  return average;
+}
+
+template <typename O>
+uint32_t ExponentialMovingAverageInput<O>::DoRun() {
+  uint32_t old_average = average;
+  average = (sensor_value * (alpha + 1) + (average * (255 - alpha))) / 256;
+  if (old_average == average && sensor_value != average) {
+    if (sensor_value > average) {
+      average++;
+    } else if (sensor_value < average) {
+      average--;
+    }
+  }
+  return average;
+}
+
+template <typename O>
+void ExponentialMovingAverageInput<O>::LogState() {
+  Serial.print(sensor_value);
+  Serial.print(" ");
+  Serial.println(average);
+}
 
 #endif

@@ -2,21 +2,13 @@
 
 DebounceInput::DebounceInput(uint32_t pin) : pin(pin) {}
 
-bool DebounceInput::GetCurrentState() { return stable_state; }
-
 bool DebounceInput::Rose() { return rose; }
 
 bool DebounceInput::Fell() { return fell; }
 
-int DebounceInput::ReadFromSensor() { return digitalRead(pin); }
+bool DebounceInput::ReadFromSensor() { return digitalRead(pin); }
 
-void DebounceInput::LogState() {
-  Serial.print(current_state);
-  Serial.print(" ");
-  Serial.println(stable_state);
-}
-
-void DebounceInput::DoRun() {
+bool DebounceInput::DoRun() {
   rose = false;
   fell = false;
 
@@ -35,7 +27,7 @@ void DebounceInput::DoRun() {
 
   bool input_value = ReadFromSensor();
   if (input_value == current_state) {
-    return;
+    return stable_state;
   }
 
   if (millis() - last_successful_change_at_millis >= kDebounceTimeMillis) {
@@ -56,6 +48,7 @@ void DebounceInput::DoRun() {
   // Input != current_state
   state_started_at_millis = millis();
   current_state = input_value;
+  return stable_state;
 }
 
 #ifndef ARDUINO

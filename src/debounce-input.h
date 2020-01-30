@@ -8,12 +8,9 @@
  * hasn't changed in a while (so that it catches the initial switch with no
  * latency).
  */
-class DebounceInput : public Filter<int> {
+class DebounceInput : public Filter<bool, bool> {
  public:
   DebounceInput(uint32_t pin);
-
-  /* Gets the current debounced state. */
-  bool GetCurrentState();
 
   /* Whether the input rose this cycle. Reset on the next call to Run. */
   bool Rose();
@@ -22,9 +19,8 @@ class DebounceInput : public Filter<int> {
   bool Fell();
 
  protected:
-  void DoRun() override;
-  int ReadFromSensor() override;
-  void LogState() override;
+  bool DoRun() override;
+  bool ReadFromSensor() override;
 
  private:
   bool stable_state = false;
