@@ -59,8 +59,6 @@ void DebounceInput::DoRun() {
 }
 
 #ifndef ARDUINO
-void DebounceInput::SetPinValue(int value) { pin_value = value; }
-
 int DebounceInput::digitalRead(uint32_t pin) {
   (void)pin;
   return pin_value;

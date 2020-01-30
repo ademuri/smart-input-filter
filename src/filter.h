@@ -21,6 +21,8 @@ class Filter {
 
 #ifndef ARDUINO
   void SetMillis(uint32_t value);
+
+  void SetPinValue(I value);
 #endif
 
  protected:
@@ -43,6 +45,8 @@ class Filter {
 
 #ifndef ARDUINO
   uint32_t millis();
+
+  I pin_value = 0;
 #endif
 
  private:
@@ -77,13 +81,18 @@ void Filter<I>::SetRunDelayInMillis(uint32_t delay) {
 
 #ifndef ARDUINO
 template <class I>
-uint32_t Filter<I>::millis() {
-  return fake_millis;
+void Filter<I>::SetMillis(uint32_t value) {
+  fake_millis = value;
 }
 
 template <class I>
-void Filter<I>::SetMillis(uint32_t value) {
-  fake_millis = value;
+void Filter<I>::SetPinValue(I value) {
+  pin_value = value;
+}
+
+template <class I>
+uint32_t Filter<I>::millis() {
+  return fake_millis;
 }
 
 class SerialClass {

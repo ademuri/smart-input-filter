@@ -21,10 +21,6 @@ class DebounceInput : public Filter<int> {
   /* Whether the input fell this cycle. Reset on the next call to Run. */
   bool Fell();
 
-#ifndef ARDUINO
-  void SetPinValue(int value);
-#endif
-
  protected:
   void DoRun() override;
   int ReadFromSensor() override;
@@ -42,7 +38,6 @@ class DebounceInput : public Filter<int> {
   const uint16_t kDebounceTimeMillis = 10;
 
 #ifndef ARDUINO
-  int pin_value = 0;
   int digitalRead(uint32_t pin);
 #endif
 };

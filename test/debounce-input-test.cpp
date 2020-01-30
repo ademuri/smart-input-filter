@@ -2,6 +2,8 @@
 
 #include "../src/debounce-input.h"
 
+namespace debounce_input_test {
+
 enum class StateChange {
   kNone,
   kRose,
@@ -15,7 +17,7 @@ struct InputOutput {
   StateChange state_change;
 };
 
-void RunDataTest(DebounceInput* input, std::vector<InputOutput> data) {
+void RunDataTest(DebounceInput* input, std::vector<InputOutput> &data) {
   uint32_t millis = 0;
   for (auto point : data) {
     for (uint32_t i = 0; i < point.duration_millis; i++) {
@@ -154,4 +156,6 @@ TEST(DebounceInput, very_fast_change) {
       // clang-format on
   };
   RunDataTest(input, data);
+}
+
 }
