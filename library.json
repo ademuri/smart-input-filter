@@ -6,5 +6,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ademuri/smart-input-filter.git"
-  }
+  },
+  "dependencies": [
+    {
+      "name": "ArduinoSTL"
+    }
+  ]
 }
