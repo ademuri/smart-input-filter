@@ -113,4 +113,16 @@ TEST(ExponentialMovingAverageInput, convert) {
   RunDataTest(input, data);
 }
 
+TEST(ExponentialMovingAverageInput, input_range) {
+  // Tests that the filter supports 24-bit inputs without overflow.
+  // Note: 2 ^ 24 = 16777216
+
+  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 127);
+  std::vector<InputOutput<uint32_t>> data = {
+    {16777215, 500, 0, 16777215},
+    {16777215, 100, 16777215, 16777215},
+  };
+  RunDataTest(input, data);
+}
+
 }
