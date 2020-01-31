@@ -5,10 +5,13 @@
 
 template <typename O>
 class AnalogFilter : public Filter<uint32_t, O> {
+#ifndef ARDUINO
   using Filter<uint32_t, O>::pin_value;
+#endif
 
  public:
   AnalogFilter(uint32_t pin);
+  AnalogFilter(uint32_t pin, O (*Convert)(uint32_t input));
 
  protected:
   uint32_t ReadFromSensor() override;
@@ -23,6 +26,10 @@ class AnalogFilter : public Filter<uint32_t, O> {
 
 template <typename O>
 AnalogFilter<O>::AnalogFilter(uint32_t pin) : pin(pin) {}
+
+template <typename O>
+AnalogFilter<O>::AnalogFilter(uint32_t pin, O (*Convert)(uint32_t input))
+    : Filter<uint32_t, O>(Convert), pin(pin) {}
 
 template <typename O>
 uint32_t AnalogFilter<O>::ReadFromSensor() {

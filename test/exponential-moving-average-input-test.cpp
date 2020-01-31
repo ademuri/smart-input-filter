@@ -5,14 +5,16 @@
 
 namespace exponential_moving_average_input_test {
 
+template <typename O>
 struct InputOutput {
   uint32_t input;
   uint32_t duration_millis;
-  uint32_t lower_bound;
-  uint32_t upper_bound;
+  O lower_bound;
+  O upper_bound;
 };
 
-void RunDataTest(ExponentialMovingAverageInput<uint32_t>* input, std::vector<InputOutput> data) {
+template <typename O>
+void RunDataTest(ExponentialMovingAverageInput<O>* input, std::vector<InputOutput<O>> data) {
   uint32_t millis = 0;
   for (auto point : data) {
     for (uint32_t i = 0; i < point.duration_millis; i++) {
@@ -33,7 +35,7 @@ void RunDataTest(ExponentialMovingAverageInput<uint32_t>* input, std::vector<Inp
 
 TEST(ExponentialMovingAverageInput, alpha_half) {
   ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 128);
-  std::vector<InputOutput> data = {
+  std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0, 0},
     {1024, 100, 4, 1024},
     {1024, 100, 1024, 1024},
@@ -45,7 +47,7 @@ TEST(ExponentialMovingAverageInput, alpha_half) {
 
 TEST(ExponentialMovingAverageInput, alpha_full) {
   ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 255);
-  std::vector<InputOutput> data = {
+  std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0, 0},
     {1024, 100, 1024, 1024},
     {0, 100, 0, 0},
@@ -55,7 +57,7 @@ TEST(ExponentialMovingAverageInput, alpha_full) {
 
 TEST(ExponentialMovingAverageInput, alpha_low) {
   ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 0);
-  std::vector<InputOutput> data = {
+  std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0, 0},
     {1024, 10, 4, 50},
     {1024, 990, 4, 1024},
@@ -69,7 +71,7 @@ TEST(ExponentialMovingAverageInput, alpha_low) {
 
 TEST(ExponentialMovingAverageInput, impulse) {
   ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 127);
-  std::vector<InputOutput> data = {
+  std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0, 0},
     {1024, 1, 512, 512},
     {0, 1, 256, 256},
@@ -93,6 +95,20 @@ TEST(ExponentialMovingAverageInput, impulse) {
     {1024, 1, 1022, 1022},
     {1024, 1, 1023, 1023},
     {1024, 1, 1024, 1024},
+  };
+  RunDataTest(input, data);
+}
+
+float analogInToVoltage(uint32_t analogIn) {
+  return analogIn / 1023.0 * 3.3;
+}
+
+TEST(ExponentialMovingAverageInput, convert) {
+  ExponentialMovingAverageInput<float> *input = new ExponentialMovingAverageInput<float>(0, 127, analogInToVoltage);
+  std::vector<InputOutput<float>> data = {
+    {0, 10, 0.0, 0.0},
+    {1023, 100, 0.0, 3.3},
+    {1023, 10, 3.3, 3.3},
   };
   RunDataTest(input, data);
 }

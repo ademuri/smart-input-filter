@@ -9,7 +9,8 @@ class ExponentialMovingAverageInput : public AnalogFilter<O> {
 
  public:
   ExponentialMovingAverageInput(uint32_t pin, uint8_t alpha);
-  uint32_t GetFilteredValue();
+  ExponentialMovingAverageInput(uint32_t pin, uint8_t alpha,
+                                O (*Convert)(uint32_t input));
 
  protected:
   uint32_t DoRun() override;
@@ -28,9 +29,9 @@ ExponentialMovingAverageInput<O>::ExponentialMovingAverageInput(uint32_t pin,
     : AnalogFilter<O>(pin), alpha(alpha) {}
 
 template <typename O>
-uint32_t ExponentialMovingAverageInput<O>::GetFilteredValue() {
-  return average;
-}
+ExponentialMovingAverageInput<O>::ExponentialMovingAverageInput(
+    uint32_t pin, uint8_t alpha, O (*Convert)(uint32_t input))
+    : AnalogFilter<O>(pin, Convert), alpha(alpha) {}
 
 template <typename O>
 uint32_t ExponentialMovingAverageInput<O>::DoRun() {

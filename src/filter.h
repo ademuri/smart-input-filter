@@ -15,13 +15,17 @@
 template <typename I, typename O>
 class Filter {
  public:
+  Filter() : Convert(Filter<I, O>::NoOpConvert) {}
+
+  Filter(O (*Convert)(I input)) : Convert(Convert) {}
+
   /* Run one iteration of the filter. Call this periodically to read the sensor
    * and run the filtering logic. */
   void Run();
 
   void SetLogToSerial(bool log);
 
-  I GetFilteredValue();
+  O GetFilteredValue();
 
 #ifndef ARDUINO
   void SetMillis(uint32_t value);
@@ -43,7 +47,7 @@ class Filter {
    * filtered value). Override this. */
   virtual void LogState();
 
-  O (*Convert)(I input);
+  O (*const Convert)(I input);
 
   /* Current cached value of the sensor. Set in Run. Used so that each
    * iteration of Run only reads from the sensor once. */
@@ -56,6 +60,8 @@ class Filter {
 #endif
 
  private:
+  static O NoOpConvert(I input);
+
   I filtered_value = 0;
   uint32_t run_at = 0;
   bool log_to_serial = false;
@@ -65,6 +71,7 @@ class Filter {
 #endif
 };
 
+#ifndef ARDUINO
 class SerialClass {
  public:
   template <typename T>
@@ -78,6 +85,7 @@ class SerialClass {
   }
 };
 extern SerialClass Serial;
+#endif
 
 template <typename I, typename O>
 void Filter<I, O>::Run() {
@@ -96,8 +104,8 @@ void Filter<I, O>::SetLogToSerial(bool log) {
 }
 
 template <typename I, typename O>
-I Filter<I, O>::GetFilteredValue() {
-  return filtered_value;
+O Filter<I, O>::GetFilteredValue() {
+  return Convert(filtered_value);
 }
 
 template <typename I, typename O>
@@ -107,9 +115,9 @@ void Filter<I, O>::SetRunDelayInMillis(uint32_t delay) {
 
 template <typename I, typename O>
 void Filter<I, O>::LogState() {
-  Serial.print(sensor_value);
+  Serial.print(Convert(sensor_value));
   Serial.print(" ");
-  Serial.println(filtered_value);
+  Serial.println(Convert(filtered_value));
 }
 
 #ifndef ARDUINO
@@ -129,5 +137,10 @@ uint32_t Filter<I, O>::millis() {
 }
 
 #endif
+
+template <typename I, typename O>
+O Filter<I, O>::NoOpConvert(I input) {
+  return (O)input;
+}
 
 #endif
