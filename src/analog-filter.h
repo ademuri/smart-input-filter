@@ -6,7 +6,7 @@
 template <typename OutputType>
 class AnalogFilter : public Filter<uint32_t, OutputType> {
 #ifndef ARDUINO
-  using Filter<uint32_t, OutputType>::pin_value;
+  using Filter<uint32_t, OutputType>::pin_value_;
 #endif
 
  public:
@@ -41,7 +41,7 @@ uint32_t AnalogFilter<OutputType>::ReadFromSensor() {
 template <typename OutputType>
 uint32_t AnalogFilter<OutputType>::analogRead(uint32_t pin) {
   (void)pin;
-  return pin_value;
+  return pin_value_;
 }
 #endif
 

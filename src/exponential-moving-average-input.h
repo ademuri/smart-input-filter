@@ -5,7 +5,7 @@
 
 template <typename OutputType>
 class ExponentialMovingAverageInput : public AnalogFilter<OutputType> {
-  using Filter<uint32_t, OutputType>::sensor_value;
+  using Filter<uint32_t, OutputType>::sensor_value_;
 
  public:
   ExponentialMovingAverageInput(uint32_t pin, uint8_t alpha);
@@ -36,11 +36,11 @@ ExponentialMovingAverageInput<OutputType>::ExponentialMovingAverageInput(
 template <typename OutputType>
 uint32_t ExponentialMovingAverageInput<OutputType>::DoRun() {
   uint32_t old_average = average;
-  average = (sensor_value * (alpha + 1) + (average * (255 - alpha))) / 256;
-  if (old_average == average && sensor_value != average) {
-    if (sensor_value > average) {
+  average = (sensor_value_ * (alpha + 1) + (average * (255 - alpha))) / 256;
+  if (old_average == average && sensor_value_ != average) {
+    if (sensor_value_ > average) {
       average++;
-    } else if (sensor_value < average) {
+    } else if (sensor_value_ < average) {
       average--;
     }
   }
@@ -49,7 +49,7 @@ uint32_t ExponentialMovingAverageInput<OutputType>::DoRun() {
 
 template <typename OutputType>
 void ExponentialMovingAverageInput<OutputType>::LogState() {
-  Serial.print(sensor_value);
+  Serial.print(sensor_value_);
   Serial.print(" ");
   Serial.println(average);
 }
