@@ -1,6 +1,6 @@
 {
   "name": "smart-input-filter",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "keywords": "arduino, filter",
   "description": "A stable, unit-tested filter library",
   "repository": {

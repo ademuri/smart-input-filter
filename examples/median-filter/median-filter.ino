@@ -14,6 +14,7 @@ void setup() {
 
 void loop() {
   filter->Run();
+  digitalWrite(kLedPin, filter->GetFilteredValue() > 511);
   Serial.flush();
   delay(10);
 }
