@@ -9,15 +9,15 @@
 #include <vector>
 #endif
 
-/* I is the input type (e.g. int for digitalRead, uint32_t for analogRead). O is
- * the output type. The filter converts from the input type to the output type
- * (with the default being no conversion). */
-template <typename I, typename O>
+/* InputType is the input type (e.g. int for digitalRead, uint32_t for
+ * analogRead). OutputType is the output type. The filter converts from the
+ * input type to the output type (with the default being no conversion). */
+template <typename InputType, typename OutputType>
 class Filter {
  public:
-  Filter() : Convert(Filter<I, O>::NoOpConvert) {}
+  Filter() : Convert(Filter<InputType, OutputType>::NoOpConvert) {}
 
-  Filter(O (*Convert)(I input)) : Convert(Convert) {}
+  Filter(OutputType (*Convert)(InputType input)) : Convert(Convert) {}
 
   /* Run one iteration of the filter. Call this periodically to read the sensor
    * and run the filtering logic. */
@@ -25,44 +25,44 @@ class Filter {
 
   void SetLogToSerial(bool log);
 
-  O GetFilteredValue();
+  OutputType GetFilteredValue();
 
 #ifndef ARDUINO
   void SetMillis(uint32_t value);
 
-  void SetPinValue(I value);
+  void SetPinValue(InputType value);
 #endif
 
  protected:
   void SetRunDelayInMillis(uint32_t delay);
 
   /* Perform the filtering logic. Override this. */
-  virtual I DoRun() = 0;
+  virtual InputType DoRun() = 0;
 
   /* Gets the raw value of the sensor. Override this to hook up to a physical
    * sensor. */
-  virtual I ReadFromSensor() = 0;
+  virtual InputType ReadFromSensor() = 0;
 
   /* Prints debugging information to the serial console (e.g. unfiltered and
    * filtered value). Override this. */
   virtual void LogState();
 
-  O (*const Convert)(I input);
+  OutputType (*const Convert)(InputType input);
 
   /* Current cached value of the sensor. Set in Run. Used so that each
    * iteration of Run only reads from the sensor once. */
-  I sensor_value = 0;
+  InputType sensor_value = 0;
 
 #ifndef ARDUINO
   uint32_t millis();
 
-  I pin_value = 0;
+  InputType pin_value = 0;
 #endif
 
  private:
-  static O NoOpConvert(I input);
+  static OutputType NoOpConvert(InputType input);
 
-  I filtered_value = 0;
+  InputType filtered_value = 0;
   uint32_t run_at = 0;
   bool log_to_serial = false;
 
@@ -87,8 +87,8 @@ class SerialClass {
 extern SerialClass Serial;
 #endif
 
-template <typename I, typename O>
-void Filter<I, O>::Run() {
+template <typename InputType, typename OutputType>
+void Filter<InputType, OutputType>::Run() {
   if (millis() >= run_at) {
     sensor_value = ReadFromSensor();
     filtered_value = DoRun();
@@ -98,49 +98,49 @@ void Filter<I, O>::Run() {
   }
 }
 
-template <typename I, typename O>
-void Filter<I, O>::SetLogToSerial(bool log) {
+template <typename InputType, typename OutputType>
+void Filter<InputType, OutputType>::SetLogToSerial(bool log) {
   log_to_serial = log;
 }
 
-template <typename I, typename O>
-O Filter<I, O>::GetFilteredValue() {
+template <typename InputType, typename OutputType>
+OutputType Filter<InputType, OutputType>::GetFilteredValue() {
   return Convert(filtered_value);
 }
 
-template <typename I, typename O>
-void Filter<I, O>::SetRunDelayInMillis(uint32_t delay) {
+template <typename InputType, typename OutputType>
+void Filter<InputType, OutputType>::SetRunDelayInMillis(uint32_t delay) {
   run_at = millis() + delay;
 }
 
-template <typename I, typename O>
-void Filter<I, O>::LogState() {
+template <typename InputType, typename OutputType>
+void Filter<InputType, OutputType>::LogState() {
   Serial.print(Convert(sensor_value));
   Serial.print(" ");
   Serial.println(Convert(filtered_value));
 }
 
 #ifndef ARDUINO
-template <typename I, typename O>
-void Filter<I, O>::SetMillis(uint32_t value) {
+template <typename InputType, typename OutputType>
+void Filter<InputType, OutputType>::SetMillis(uint32_t value) {
   fake_millis = value;
 }
 
-template <typename I, typename O>
-void Filter<I, O>::SetPinValue(I value) {
+template <typename InputType, typename OutputType>
+void Filter<InputType, OutputType>::SetPinValue(InputType value) {
   pin_value = value;
 }
 
-template <typename I, typename O>
-uint32_t Filter<I, O>::millis() {
+template <typename InputType, typename OutputType>
+uint32_t Filter<InputType, OutputType>::millis() {
   return fake_millis;
 }
 
 #endif
 
-template <typename I, typename O>
-O Filter<I, O>::NoOpConvert(I input) {
-  return (O)input;
+template <typename InputType, typename OutputType>
+OutputType Filter<InputType, OutputType>::NoOpConvert(InputType input) {
+  return (OutputType)input;
 }
 
 #endif

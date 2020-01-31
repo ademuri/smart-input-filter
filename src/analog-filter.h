@@ -3,15 +3,15 @@
 
 #include "filter.h"
 
-template <typename O>
-class AnalogFilter : public Filter<uint32_t, O> {
+template <typename OutputType>
+class AnalogFilter : public Filter<uint32_t, OutputType> {
 #ifndef ARDUINO
-  using Filter<uint32_t, O>::pin_value;
+  using Filter<uint32_t, OutputType>::pin_value;
 #endif
 
  public:
   AnalogFilter(uint32_t pin);
-  AnalogFilter(uint32_t pin, O (*Convert)(uint32_t input));
+  AnalogFilter(uint32_t pin, OutputType (*Convert)(uint32_t input));
 
  protected:
   uint32_t ReadFromSensor() override;
@@ -24,21 +24,22 @@ class AnalogFilter : public Filter<uint32_t, O> {
 #endif
 };
 
-template <typename O>
-AnalogFilter<O>::AnalogFilter(uint32_t pin) : pin(pin) {}
+template <typename OutputType>
+AnalogFilter<OutputType>::AnalogFilter(uint32_t pin) : pin(pin) {}
 
-template <typename O>
-AnalogFilter<O>::AnalogFilter(uint32_t pin, O (*Convert)(uint32_t input))
-    : Filter<uint32_t, O>(Convert), pin(pin) {}
+template <typename OutputType>
+AnalogFilter<OutputType>::AnalogFilter(uint32_t pin,
+                                       OutputType (*Convert)(uint32_t input))
+    : Filter<uint32_t, OutputType>(Convert), pin(pin) {}
 
-template <typename O>
-uint32_t AnalogFilter<O>::ReadFromSensor() {
+template <typename OutputType>
+uint32_t AnalogFilter<OutputType>::ReadFromSensor() {
   return analogRead(pin);
 }
 
 #ifndef ARDUINO
-template <typename O>
-uint32_t AnalogFilter<O>::analogRead(uint32_t pin) {
+template <typename OutputType>
+uint32_t AnalogFilter<OutputType>::analogRead(uint32_t pin) {
   (void)pin;
   return pin_value;
 }

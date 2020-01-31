@@ -3,14 +3,14 @@
 
 #include "analog-filter.h"
 
-template <typename O>
-class ExponentialMovingAverageInput : public AnalogFilter<O> {
-  using Filter<uint32_t, O>::sensor_value;
+template <typename OutputType>
+class ExponentialMovingAverageInput : public AnalogFilter<OutputType> {
+  using Filter<uint32_t, OutputType>::sensor_value;
 
  public:
   ExponentialMovingAverageInput(uint32_t pin, uint8_t alpha);
   ExponentialMovingAverageInput(uint32_t pin, uint8_t alpha,
-                                O (*Convert)(uint32_t input));
+                                OutputType (*Convert)(uint32_t input));
 
  protected:
   uint32_t DoRun() override;
@@ -23,18 +23,18 @@ class ExponentialMovingAverageInput : public AnalogFilter<O> {
   const uint8_t alpha;
 };
 
-template <typename O>
-ExponentialMovingAverageInput<O>::ExponentialMovingAverageInput(uint32_t pin,
-                                                                uint8_t alpha)
-    : AnalogFilter<O>(pin), alpha(alpha) {}
+template <typename OutputType>
+ExponentialMovingAverageInput<OutputType>::ExponentialMovingAverageInput(
+    uint32_t pin, uint8_t alpha)
+    : AnalogFilter<OutputType>(pin), alpha(alpha) {}
 
-template <typename O>
-ExponentialMovingAverageInput<O>::ExponentialMovingAverageInput(
-    uint32_t pin, uint8_t alpha, O (*Convert)(uint32_t input))
-    : AnalogFilter<O>(pin, Convert), alpha(alpha) {}
+template <typename OutputType>
+ExponentialMovingAverageInput<OutputType>::ExponentialMovingAverageInput(
+    uint32_t pin, uint8_t alpha, OutputType (*Convert)(uint32_t input))
+    : AnalogFilter<OutputType>(pin, Convert), alpha(alpha) {}
 
-template <typename O>
-uint32_t ExponentialMovingAverageInput<O>::DoRun() {
+template <typename OutputType>
+uint32_t ExponentialMovingAverageInput<OutputType>::DoRun() {
   uint32_t old_average = average;
   average = (sensor_value * (alpha + 1) + (average * (255 - alpha))) / 256;
   if (old_average == average && sensor_value != average) {
@@ -47,8 +47,8 @@ uint32_t ExponentialMovingAverageInput<O>::DoRun() {
   return average;
 }
 
-template <typename O>
-void ExponentialMovingAverageInput<O>::LogState() {
+template <typename OutputType>
+void ExponentialMovingAverageInput<OutputType>::LogState() {
   Serial.print(sensor_value);
   Serial.print(" ");
   Serial.println(average);
