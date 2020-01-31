@@ -9,9 +9,9 @@
 #include <vector>
 #endif
 
-/* InputType is the input type (e.g. int for digitalRead, uint32_t for
- * analogRead). OutputType is the output type. The filter converts from the
- * input type to the output type (with the default being no conversion). */
+// InputType is the input type (e.g. int for digitalRead, uint32_t for
+// analogRead). OutputType is the output type. The filter converts from the
+// input type to the output type (with the default being no conversion).
 template <typename InputType, typename OutputType>
 class Filter {
  public:
@@ -19,8 +19,8 @@ class Filter {
 
   Filter(OutputType (*Convert)(InputType input)) : Convert(Convert) {}
 
-  /* Run one iteration of the filter. Call this periodically to read the sensor
-   * and run the filtering logic. */
+  // Run one iteration of the filter. Call this periodically to read the sensor
+  // and run the filtering logic.
   void Run();
 
   void SetLogToSerial(bool log);
@@ -36,21 +36,21 @@ class Filter {
  protected:
   void SetRunDelayInMillis(uint32_t delay);
 
-  /* Perform the filtering logic. Override this. */
+  // Perform the filtering logic. Override this.
   virtual InputType DoRun() = 0;
 
-  /* Gets the raw value of the sensor. Override this to hook up to a physical
-   * sensor. */
+  // Gets the raw value of the sensor. Override this to hook up to a physical
+  // sensor.
   virtual InputType ReadFromSensor() = 0;
 
-  /* Prints debugging information to the serial console (e.g. unfiltered and
-   * filtered value). Override this. */
+  // Prints debugging information to the serial console (e.g. unfiltered and
+  // filtered value). Override this.
   virtual void LogState();
 
   OutputType (*const Convert)(InputType input);
 
-  /* Current cached value of the sensor. Set in Run. Used so that each
-   * iteration of Run only reads from the sensor once. */
+  // Current cached value of the sensor. Set in Run. Used so that each
+  // iteration of Run only reads from the sensor once.
   InputType sensor_value = 0;
 
 #ifndef ARDUINO
