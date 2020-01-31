@@ -21,10 +21,10 @@ class DebounceInput : public Filter<bool, bool> {
   bool ReadFromSensor() override;
 
  private:
-  bool stable_state = false;
-  bool current_state = false;
-  bool rose = false;
-  bool fell = false;
+  bool stable_state_ = false;
+  bool current_state_ = false;
+  bool rose_ = false;
+  bool fell_ = false;
   uint32_t state_started_at_millis = 0;
   uint32_t last_successful_change_at_millis = 0;
 

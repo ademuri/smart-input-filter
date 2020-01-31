@@ -17,7 +17,7 @@ class AnalogFilter : public Filter<uint32_t, OutputType> {
   uint32_t ReadFromSensor() override;
 
  private:
-  const uint32_t pin;
+  const uint32_t pin_;
 
 #ifndef ARDUINO
   uint32_t analogRead(uint32_t pin);
@@ -25,16 +25,16 @@ class AnalogFilter : public Filter<uint32_t, OutputType> {
 };
 
 template <typename OutputType>
-AnalogFilter<OutputType>::AnalogFilter(uint32_t pin) : pin(pin) {}
+AnalogFilter<OutputType>::AnalogFilter(uint32_t pin) : pin_(pin) {}
 
 template <typename OutputType>
 AnalogFilter<OutputType>::AnalogFilter(uint32_t pin,
                                        OutputType (*Convert)(uint32_t input))
-    : Filter<uint32_t, OutputType>(Convert), pin(pin) {}
+    : Filter<uint32_t, OutputType>(Convert), pin_(pin) {}
 
 template <typename OutputType>
 uint32_t AnalogFilter<OutputType>::ReadFromSensor() {
-  return analogRead(pin);
+  return analogRead(pin_);
 }
 
 #ifndef ARDUINO

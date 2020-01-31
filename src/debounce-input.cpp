@@ -2,53 +2,53 @@
 
 DebounceInput::DebounceInput(uint32_t pin) : pin(pin) {}
 
-bool DebounceInput::Rose() { return rose; }
+bool DebounceInput::Rose() { return rose_; }
 
-bool DebounceInput::Fell() { return fell; }
+bool DebounceInput::Fell() { return fell_; }
 
 bool DebounceInput::ReadFromSensor() { return digitalRead(pin); }
 
 bool DebounceInput::DoRun() {
-  rose = false;
-  fell = false;
+  rose_ = false;
+  fell_ = false;
 
   if (millis() - state_started_at_millis >= kDebounceTimeMillis) {
-    if (stable_state != current_state) {
-      stable_state = current_state;
+    if (stable_state_ != current_state_) {
+      stable_state_ = current_state_;
       last_successful_change_at_millis = millis();
 
-      if (stable_state) {
-        rose = true;
+      if (stable_state_) {
+        rose_ = true;
       } else {
-        fell = true;
+        fell_ = true;
       }
     }
   }
 
   bool input_value = ReadFromSensor();
-  if (input_value == current_state) {
-    return stable_state;
+  if (input_value == current_state_) {
+    return stable_state_;
   }
 
   if (millis() - last_successful_change_at_millis >= kDebounceTimeMillis) {
-    if (stable_state != input_value) {
+    if (stable_state_ != input_value) {
       if (input_value) {
-        rose = true;
+        rose_ = true;
       } else {
-        fell = true;
+        fell_ = true;
       }
     }
 
-    stable_state = input_value;
-    current_state = input_value;
+    stable_state_ = input_value;
+    current_state_ = input_value;
     last_successful_change_at_millis = millis();
     state_started_at_millis = millis();
   }
 
-  // Input != current_state
+  // Input != current_state_
   state_started_at_millis = millis();
-  current_state = input_value;
-  return stable_state;
+  current_state_ = input_value;
+  return stable_state_;
 }
 
 #ifndef ARDUINO
