@@ -15,6 +15,7 @@
 template <typename InputType, typename OutputType>
 class Filter {
  public:
+  // Default constructor uses a no-op converter.
   Filter() : Convert_(Filter<InputType, OutputType>::NoOpConvert) {}
 
   Filter(OutputType (*Convert)(InputType input)) : Convert_(Convert) {}
@@ -23,10 +24,16 @@ class Filter {
   // and run the filtering logic.
   void Run();
 
-  void SetLogToSerial(bool log);
-
+  // Returns the output of the filter, converted.
   OutputType GetFilteredValue();
 
+  // Controls whether to log the input and output values of this filter. Values
+  // are logged to Serial in the form <input> <output>. Both input and output
+  // are converted before logging. These values can be graphed using the
+  // Arduino serial plotter.
+  void SetLogToSerial(bool log);
+
+  // Setters for tests
 #ifndef ARDUINO
   void SetMillis(uint32_t value);
 
@@ -34,6 +41,8 @@ class Filter {
 #endif
 
  protected:
+  // This will instruct the filter to not run until at least delay milliseconds
+  // have passed.
   void SetRunDelayInMillis(uint32_t delay);
 
   // Perform the filtering logic. Override this.
@@ -43,16 +52,19 @@ class Filter {
   // sensor.
   virtual InputType ReadFromSensor() = 0;
 
+  // Converts from the sensor type to the usage type (e.g. converting from a
+  // 10-bit uint32_t that analogRead returns to a voltage).
+  OutputType (*const Convert_)(InputType input);
+
   // Prints debugging information to the serial console (e.g. unfiltered and
   // filtered value). Override this.
   virtual void LogState();
-
-  OutputType (*const Convert_)(InputType input);
 
   // Current cached value of the sensor. Set in Run. Used so that each
   // iteration of Run only reads from the sensor once.
   InputType sensor_value_ = 0;
 
+  // Test functions
 #ifndef ARDUINO
   uint32_t millis();
 

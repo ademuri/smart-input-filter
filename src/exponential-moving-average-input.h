@@ -3,6 +3,16 @@
 
 #include "analog-filter.h"
 
+// An exponential moving average filter. This uses only integer (32-bit) math.
+// This supports up to 24-bit inputs.
+//
+// An exponential moving average filter is defined as:
+//    average = input_value * alpha + previous_average * (1 - alpha)
+// This filter takes an alpha from 0 to 255, with 255 corresponding to 1 on a
+// typical floating-point based filter.
+//
+// An alpha of 255 means that the filter returns the current value of the input.
+// An alpha of 0 means the filtered value changes very slowly.
 template <typename OutputType>
 class ExponentialMovingAverageInput : public AnalogFilter<OutputType> {
   using Filter<uint32_t, OutputType>::sensor_value_;
@@ -14,8 +24,6 @@ class ExponentialMovingAverageInput : public AnalogFilter<OutputType> {
 
  protected:
   uint32_t DoRun() override;
-
-  void LogState() override;
 
  private:
   uint32_t average_ = 0;
@@ -45,13 +53,6 @@ uint32_t ExponentialMovingAverageInput<OutputType>::DoRun() {
     }
   }
   return average_;
-}
-
-template <typename OutputType>
-void ExponentialMovingAverageInput<OutputType>::LogState() {
-  Serial.print(sensor_value_);
-  Serial.print(" ");
-  Serial.println(average_);
 }
 
 #endif

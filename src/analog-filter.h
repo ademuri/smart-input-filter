@@ -14,6 +14,7 @@ class AnalogFilter : public Filter<uint32_t, OutputType> {
   AnalogFilter(uint32_t pin, OutputType (*Convert)(uint32_t input));
 
  protected:
+  // Reads from an analog input using analogRead on the specified pin.
   uint32_t ReadFromSensor() override;
 
  private:
