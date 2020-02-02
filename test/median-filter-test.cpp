@@ -2,38 +2,9 @@
 
 #include <cstdio>
 #include "../src/median-filter.h"
+#include "run-data-test.h"
 
 namespace median_filter_input_test {
-
-template <typename O>
-struct InputOutput {
-  uint32_t input;
-  uint32_t duration_millis;
-  O lower_bound;
-  O upper_bound;
-};
-
-template <typename O, uint8_t size>
-void RunDataTest(MedianFilter<O, size>* input, std::vector<InputOutput<O>> data) {
-  uint32_t millis = 0;
-  uint32_t point_index = 0;
-  for (auto point : data) {
-    for (uint32_t i = 0; i < point.duration_millis; i++) {
-      std::ostringstream debug_stream;
-      debug_stream << "millis: " << millis << ", point " << point_index << ": (" << point.input << ")";
-
-      input->SetMillis(millis);
-      input->SetPinValue(point.input);
-      input->Run();
-
-      EXPECT_LE(point.lower_bound, input->GetFilteredValue()) << debug_stream.str();
-      EXPECT_GE(point.upper_bound, input->GetFilteredValue()) << debug_stream.str();
-
-      millis++;
-    }
-    point_index++;
-  }
-}
 
 TEST(MedianFilter, loading_in_order) {
   MedianFilter<uint32_t, 5> *input = new MedianFilter<uint32_t, 5>(0);

@@ -2,36 +2,9 @@
 
 #include <cstdio>
 #include "../src/exponential-moving-average-filter.h"
+#include "run-data-test.h"
 
 namespace exponential_moving_average_filter_test {
-
-template <typename O>
-struct InputOutput {
-  uint32_t input;
-  uint32_t duration_millis;
-  O lower_bound;
-  O upper_bound;
-};
-
-template <typename O>
-void RunDataTest(ExponentialMovingAverageFilter<O>* filter, std::vector<InputOutput<O>> data) {
-  uint32_t millis = 0;
-  for (auto point : data) {
-    for (uint32_t i = 0; i < point.duration_millis; i++) {
-      std::ostringstream debug_stream;
-      debug_stream << "millis: " << millis;
-
-      filter->SetMillis(millis);
-      filter->SetPinValue(point.input);
-      filter->Run();
-
-      EXPECT_LE(point.lower_bound, filter->GetFilteredValue()) << debug_stream.str();
-      EXPECT_GE(point.upper_bound, filter->GetFilteredValue()) << debug_stream.str();
-
-      millis++;
-    }
-  }
-}
 
 TEST(ExponentialMovingAverageFilter, alpha_half) {
   ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 128);
