@@ -7,6 +7,19 @@ struct InputOutput {
   uint32_t duration_millis;
   O lower_bound;
   O upper_bound;
+
+  InputOutput(uint32_t input, uint32_t duration_millis, O exact_value)
+      : input(input),
+        duration_millis(duration_millis),
+        lower_bound(exact_value),
+        upper_bound(exact_value) {}
+
+  InputOutput(uint32_t input, uint32_t duration_millis, O lower_bound,
+              O upper_bound)
+      : input(input),
+        duration_millis(duration_millis),
+        lower_bound(lower_bound),
+        upper_bound(upper_bound) {}
 };
 
 template <typename O>
