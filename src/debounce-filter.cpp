@@ -1,14 +1,14 @@
-#include "debounce-input.h"
+#include "debounce-filter.h"
 
-DebounceInput::DebounceInput(uint32_t pin) : pin(pin) {}
+DebounceFilter::DebounceFilter(uint32_t pin) : pin(pin) {}
 
-bool DebounceInput::Rose() { return rose_; }
+bool DebounceFilter::Rose() { return rose_; }
 
-bool DebounceInput::Fell() { return fell_; }
+bool DebounceFilter::Fell() { return fell_; }
 
-bool DebounceInput::ReadFromSensor() { return digitalRead(pin); }
+bool DebounceFilter::ReadFromSensor() { return digitalRead(pin); }
 
-bool DebounceInput::DoRun() {
+bool DebounceFilter::DoRun() {
   rose_ = false;
   fell_ = false;
 
@@ -52,7 +52,7 @@ bool DebounceInput::DoRun() {
 }
 
 #ifndef ARDUINO
-int DebounceInput::digitalRead(uint32_t pin) {
+int DebounceFilter::digitalRead(uint32_t pin) {
   (void)pin;
   return pin_value_;
 }

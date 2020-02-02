@@ -1,12 +1,12 @@
-#include "debounce-input.h"
+#include "debounce-filter.h"
 
 const uint8_t kButtonPin = 0;
 const uint8_t kLedPin = 13;
-DebounceInput *button;
+DebounceFilter *button;
 
 void setup() {
   pinMode(kButtonPin, INPUT_PULLUP);
-  button = new DebounceInput(kButtonPin);
+  button = new DebounceFilter(kButtonPin);
 
   pinMode(kLedPin, OUTPUT);
 }

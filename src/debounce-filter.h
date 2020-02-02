@@ -6,9 +6,9 @@
 // Debounces an input such as a switch. Responds immediately if the input
 // hasn't changed in a while (so that it catches the initial switch with no
 // latency).
-class DebounceInput : public Filter<bool, bool> {
+class DebounceFilter : public Filter<bool, bool> {
  public:
-  DebounceInput(uint32_t pin);
+  DebounceFilter(uint32_t pin);
 
   // Whether the input rose this cycle. Reset on the next call to Run.
   bool Rose();

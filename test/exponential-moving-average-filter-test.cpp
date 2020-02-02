@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 
 #include <cstdio>
-#include "../src/exponential-moving-average-input.h"
+#include "../src/exponential-moving-average-filter.h"
 
-namespace exponential_moving_average_input_test {
+namespace exponential_moving_average_filter_test {
 
 template <typename O>
 struct InputOutput {
@@ -14,27 +14,27 @@ struct InputOutput {
 };
 
 template <typename O>
-void RunDataTest(ExponentialMovingAverageInput<O>* input, std::vector<InputOutput<O>> data) {
+void RunDataTest(ExponentialMovingAverageFilter<O>* filter, std::vector<InputOutput<O>> data) {
   uint32_t millis = 0;
   for (auto point : data) {
     for (uint32_t i = 0; i < point.duration_millis; i++) {
       std::ostringstream debug_stream;
       debug_stream << "millis: " << millis;
 
-      input->SetMillis(millis);
-      input->SetPinValue(point.input);
-      input->Run();
+      filter->SetMillis(millis);
+      filter->SetPinValue(point.input);
+      filter->Run();
 
-      EXPECT_LE(point.lower_bound, input->GetFilteredValue()) << debug_stream.str();
-      EXPECT_GE(point.upper_bound, input->GetFilteredValue()) << debug_stream.str();
+      EXPECT_LE(point.lower_bound, filter->GetFilteredValue()) << debug_stream.str();
+      EXPECT_GE(point.upper_bound, filter->GetFilteredValue()) << debug_stream.str();
 
       millis++;
     }
   }
 }
 
-TEST(ExponentialMovingAverageInput, alpha_half) {
-  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 128);
+TEST(ExponentialMovingAverageFilter, alpha_half) {
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 128);
   std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0, 0},
     {1024, 100, 4, 1024},
@@ -42,21 +42,21 @@ TEST(ExponentialMovingAverageInput, alpha_half) {
     {0, 100, 0, 1020},
     {0, 100, 0, 0},
   };
-  RunDataTest(input, data);
+  RunDataTest(filter, data);
 }
 
-TEST(ExponentialMovingAverageInput, alpha_full) {
-  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 255);
+TEST(ExponentialMovingAverageFilter, alpha_full) {
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 255);
   std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0, 0},
     {1024, 100, 1024, 1024},
     {0, 100, 0, 0},
   };
-  RunDataTest(input, data);
+  RunDataTest(filter, data);
 }
 
-TEST(ExponentialMovingAverageInput, alpha_low) {
-  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 0);
+TEST(ExponentialMovingAverageFilter, alpha_low) {
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 0);
   std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0, 0},
     {1024, 10, 4, 50},
@@ -66,11 +66,11 @@ TEST(ExponentialMovingAverageInput, alpha_low) {
     {0, 1000, 0, 1020},
     {0, 100, 0, 0},
   };
-  RunDataTest(input, data);
+  RunDataTest(filter, data);
 }
 
-TEST(ExponentialMovingAverageInput, impulse) {
-  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 127);
+TEST(ExponentialMovingAverageFilter, impulse) {
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 127);
   std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0, 0},
     {1024, 1, 512, 512},
@@ -96,33 +96,33 @@ TEST(ExponentialMovingAverageInput, impulse) {
     {1024, 1, 1023, 1023},
     {1024, 1, 1024, 1024},
   };
-  RunDataTest(input, data);
+  RunDataTest(filter, data);
 }
 
 float analogInToVoltage(uint32_t analogIn) {
   return analogIn / 1023.0 * 3.3;
 }
 
-TEST(ExponentialMovingAverageInput, convert) {
-  ExponentialMovingAverageInput<float> *input = new ExponentialMovingAverageInput<float>(0, 127, analogInToVoltage);
+TEST(ExponentialMovingAverageFilter, convert) {
+  ExponentialMovingAverageFilter<float> *filter = new ExponentialMovingAverageFilter<float>(0, 127, analogInToVoltage);
   std::vector<InputOutput<float>> data = {
     {0, 10, 0.0, 0.0},
     {1023, 100, 0.0, 3.3},
     {1023, 10, 3.3, 3.3},
   };
-  RunDataTest(input, data);
+  RunDataTest(filter, data);
 }
 
-TEST(ExponentialMovingAverageInput, input_range) {
-  // Tests that the filter supports 24-bit inputs without overflow.
+TEST(ExponentialMovingAverageFilter, filter_range) {
+  // Tests that the filter supports 24-bit filters without overflow.
   // Note: 2 ^ 24 = 16777216
 
-  ExponentialMovingAverageInput<uint32_t> *input = new ExponentialMovingAverageInput<uint32_t>(0, 127);
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 127);
   std::vector<InputOutput<uint32_t>> data = {
     {16777215, 500, 0, 16777215},
     {16777215, 100, 16777215, 16777215},
   };
-  RunDataTest(input, data);
+  RunDataTest(filter, data);
 }
 
 }
