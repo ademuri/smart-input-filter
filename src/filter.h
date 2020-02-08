@@ -16,9 +16,13 @@ template <typename InputType, typename OutputType>
 class Filter {
  public:
   // Default constructor uses a no-op converter.
-  Filter() : Convert_(Filter<InputType, OutputType>::NoOpConvert) {}
+  Filter(InputType (*const ReadFromSensor)())
+      : ReadFromSensor_(ReadFromSensor),
+        Convert_(Filter<InputType, OutputType>::NoOpConvert) {}
 
-  Filter(OutputType (*Convert)(InputType input)) : Convert_(Convert) {}
+  Filter(InputType (*const ReadFromSensor)(),
+         OutputType (*Convert)(InputType input))
+      : ReadFromSensor_(ReadFromSensor), Convert_(Convert) {}
 
   // Run one iteration of the filter. Call this periodically to read the sensor
   // and run the filtering logic.
@@ -32,6 +36,10 @@ class Filter {
   // are converted before logging. These values can be graphed using the
   // Arduino serial plotter.
   void SetLogToSerial(bool log);
+
+  // Used to construct input function for standard Arduino inputs
+  template <uint32_t pin>
+  static bool (*const ForDigitalRead)();
 
   // Setters for tests
 #ifndef ARDUINO
@@ -48,9 +56,8 @@ class Filter {
   // Perform the filtering logic. Override this.
   virtual InputType DoRun() = 0;
 
-  // Gets the raw value of the sensor. Override this to hook up to a physical
-  // sensor.
-  virtual InputType ReadFromSensor() = 0;
+  // Gets the raw value of the sensor.
+  InputType (*const ReadFromSensor_)();
 
   // Converts from the sensor type to the usage type (e.g. converting from a
   // 10-bit uint32_t that analogRead returns to a voltage).
@@ -102,7 +109,7 @@ extern SerialClass Serial;
 template <typename InputType, typename OutputType>
 void Filter<InputType, OutputType>::Run() {
   if (millis() >= run_at_) {
-    sensor_value_ = ReadFromSensor();
+    sensor_value_ = ReadFromSensor_();
     filtered_value_ = DoRun();
     if (log_to_serial_) {
       LogState();
@@ -130,6 +137,11 @@ void Filter<InputType, OutputType>::LogState() {
   Serial.print(Convert_(sensor_value_));
   Serial.print(" ");
   Serial.println(Convert_(filtered_value_));
+}
+
+template <uint32_t pin>
+static bool (*const Filter::ForDigitalRead)() {
+  return digitalRead(pin);
 }
 
 #ifndef ARDUINO
