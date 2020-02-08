@@ -8,21 +8,20 @@
 
 #include "../src/filter.h"
 
-template <typename O>
+template <typename I, typename O>
 struct InputOutput {
-  uint32_t input;
+  I input;
   uint32_t duration_millis;
   O lower_bound;
   O upper_bound;
 
-  InputOutput(uint32_t input, uint32_t duration_millis, O exact_value)
+  InputOutput(I input, uint32_t duration_millis, O exact_value)
       : input(input),
         duration_millis(duration_millis),
         lower_bound(exact_value),
         upper_bound(exact_value) {}
 
-  InputOutput(uint32_t input, uint32_t duration_millis, O lower_bound,
-              O upper_bound)
+  InputOutput(I input, uint32_t duration_millis, O lower_bound, O upper_bound)
       : input(input),
         duration_millis(duration_millis),
         lower_bound(lower_bound),
@@ -31,10 +30,15 @@ struct InputOutput {
 
 extern uint32_t analogReadValue;
 extern uint32_t analogRead();
+extern void setAnalogRead(uint32_t value);
 
-template <typename O>
-void RunDataTest(Filter<uint32_t, O>* filter,
-                 std::vector<InputOutput<O>> data) {
+extern float floatReadValue;
+extern float floatRead();
+extern void setFloatRead(float value);
+
+template <typename I, typename O>
+void RunDataTest(Filter<I, O>* filter, std::vector<InputOutput<I, O>> data,
+                 void (*setSensorValue)(I value)) {
   uint32_t millis = 0;
   uint32_t point_index = 0;
   for (auto point : data) {
@@ -44,7 +48,7 @@ void RunDataTest(Filter<uint32_t, O>* filter,
                    << point.input << ")";
 
       filter->SetMillis(millis);
-      analogReadValue = point.input;
+      setSensorValue(point.input);
       filter->Run();
 
       EXPECT_GE(filter->GetFilteredValue(), point.lower_bound)

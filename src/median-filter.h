@@ -14,8 +14,9 @@
 #include "filter.h"
 
 namespace median_filter {
+template <typename ValueType>
 struct ValuePoint {
-  uint32_t value;
+  ValueType value;
   uint8_t index;
 };
 }  // namespace median_filter
@@ -28,21 +29,21 @@ struct ValuePoint {
 // iterate through the buffer at most once.
 //
 // For even sizes, this returns the lower median.
-template <typename OutputType, uint8_t size>
-class MedianFilter : public Filter<uint32_t, OutputType> {
-  using Filter<uint32_t, OutputType>::sensor_value_;
+template <typename InputType, typename OutputType, uint8_t size>
+class MedianFilter : public Filter<InputType, OutputType> {
+  using Filter<InputType, OutputType>::sensor_value_;
 
  public:
-  MedianFilter(uint32_t (*const ReadFromSensor)());
-  MedianFilter(uint32_t (*const ReadFromSensor)(),
-               OutputType (*Convert)(uint32_t input));
+  MedianFilter(InputType (*const ReadFromSensor)());
+  MedianFilter(InputType (*const ReadFromSensor)(),
+               OutputType (*Convert)(InputType input));
 
  protected:
-  uint32_t DoRun() override;
+  InputType DoRun() override;
 
  private:
   // Sorted list of recent values
-  std::list<median_filter::ValuePoint> history_;
+  std::list<median_filter::ValuePoint<InputType>> history_;
 
   // The index of the next value to insert. Used to keep <size> elements in the
   // list.
@@ -53,17 +54,18 @@ class MedianFilter : public Filter<uint32_t, OutputType> {
   bool history_full_ = false;
 };
 
-template <typename OutputType, uint8_t size>
-MedianFilter<OutputType, size>::MedianFilter(uint32_t (*const ReadFromSensor)())
-    : Filter<uint32_t, OutputType>(ReadFromSensor) {}
+template <typename InputType, typename OutputType, uint8_t size>
+MedianFilter<InputType, OutputType, size>::MedianFilter(
+    InputType (*const ReadFromSensor)())
+    : Filter<InputType, OutputType>(ReadFromSensor) {}
 
-template <typename OutputType, uint8_t size>
-MedianFilter<OutputType, size>::MedianFilter(
-    uint32_t (*const ReadFromSensor)(), OutputType (*Convert)(uint32_t input))
-    : Filter<uint32_t, OutputType>(ReadFromSensor, Convert) {}
+template <typename InputType, typename OutputType, uint8_t size>
+MedianFilter<InputType, OutputType, size>::MedianFilter(
+    InputType (*const ReadFromSensor)(), OutputType (*Convert)(InputType input))
+    : Filter<InputType, OutputType>(ReadFromSensor, Convert) {}
 
-template <typename OutputType, uint8_t size>
-uint32_t MedianFilter<OutputType, size>::DoRun() {
+template <typename InputType, typename OutputType, uint8_t size>
+InputType MedianFilter<InputType, OutputType, size>::DoRun() {
   // Initial case: history has 0 or 1 elements
   if (history_.empty()) {
     history_.push_back({sensor_value_, ring_buffer_index_});
@@ -86,7 +88,7 @@ uint32_t MedianFilter<OutputType, size>::DoRun() {
       history_full_ = true;
     }
 
-    std::list<median_filter::ValuePoint>::iterator it = history_.begin();
+    auto it = history_.begin();
     uint8_t i = 0;
     bool inserted = false;
     while (it != history_.end()) {
@@ -121,7 +123,7 @@ uint32_t MedianFilter<OutputType, size>::DoRun() {
 
   // typical case: history is full
   uint8_t element_index_to_remove = ring_buffer_index_;
-  std::list<median_filter::ValuePoint>::iterator it = history_.begin();
+  auto it = history_.begin();
   uint8_t i = 0;
   bool inserted = false;
   bool removed = false;
