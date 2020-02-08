@@ -6,7 +6,7 @@ MedianFilter<uint32_t, 5> *filter;
 
 void setup() {
   pinMode(kInputPin, INPUT_PULLUP);
-  filter = new MedianFilter<uint32_t, 5>(kInputPin);
+  filter = new MedianFilter<uint32_t, 5>(filter_functions::ForAnalogRead<kInputPin>());
   filter->SetLogToSerial(true);
 
   pinMode(kLedPin, OUTPUT);

@@ -7,7 +7,7 @@
 namespace exponential_moving_average_filter_test {
 
 TEST(ExponentialMovingAverageFilter, alpha_half) {
-  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 128);
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(analogRead, 128);
   std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0},
     {1024, 100, 4, 1024},
@@ -19,7 +19,7 @@ TEST(ExponentialMovingAverageFilter, alpha_half) {
 }
 
 TEST(ExponentialMovingAverageFilter, alpha_full) {
-  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 255);
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(analogRead, 255);
   std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0},
     {1024, 100, 1024},
@@ -29,7 +29,7 @@ TEST(ExponentialMovingAverageFilter, alpha_full) {
 }
 
 TEST(ExponentialMovingAverageFilter, alpha_low) {
-  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 0);
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(analogRead, 0);
   std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0},
     {1024, 10, 4, 50},
@@ -43,7 +43,7 @@ TEST(ExponentialMovingAverageFilter, alpha_low) {
 }
 
 TEST(ExponentialMovingAverageFilter, impulse) {
-  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 127);
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(analogRead, 127);
   std::vector<InputOutput<uint32_t>> data = {
     {0, 10, 0},
     {1024, 1, 512},
@@ -77,7 +77,7 @@ float analogInToVoltage(uint32_t analogIn) {
 }
 
 TEST(ExponentialMovingAverageFilter, convert) {
-  ExponentialMovingAverageFilter<float> *filter = new ExponentialMovingAverageFilter<float>(0, 127, analogInToVoltage);
+  ExponentialMovingAverageFilter<float> *filter = new ExponentialMovingAverageFilter<float>(analogRead, 127, analogInToVoltage);
   std::vector<InputOutput<float>> data = {
     {0, 10, 0.0},
     {1023, 100, 0.0, 3.3},
@@ -90,7 +90,7 @@ TEST(ExponentialMovingAverageFilter, filter_range) {
   // Tests that the filter supports 24-bit filters without overflow.
   // Note: 2 ^ 24 = 16777216
 
-  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(0, 127);
+  ExponentialMovingAverageFilter<uint32_t> *filter = new ExponentialMovingAverageFilter<uint32_t>(analogRead, 127);
   std::vector<InputOutput<uint32_t>> data = {
     {16777215, 500, 0, 16777215},
     {16777215, 100, 16777215},

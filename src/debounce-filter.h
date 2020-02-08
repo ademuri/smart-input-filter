@@ -8,7 +8,7 @@
 // latency).
 class DebounceFilter : public Filter<bool, bool> {
  public:
-  DebounceFilter(uint32_t pin);
+  DebounceFilter(bool (*const ReadFromSensor)());
 
   // Whether the input rose this cycle. Reset on the next call to Run.
   bool Rose();
@@ -18,7 +18,6 @@ class DebounceFilter : public Filter<bool, bool> {
 
  protected:
   bool DoRun() override;
-  bool ReadFromSensor() override;
 
  private:
   bool stable_state_ = false;
@@ -28,12 +27,7 @@ class DebounceFilter : public Filter<bool, bool> {
   uint32_t state_started_at_millis = 0;
   uint32_t last_successful_change_at_millis = 0;
 
-  const uint32_t pin;
   const uint16_t kDebounceTimeMillis = 10;
-
-#ifndef ARDUINO
-  int digitalRead(uint32_t pin);
-#endif
 };
 
 #endif

@@ -6,7 +6,7 @@ DebounceFilter *button;
 
 void setup() {
   pinMode(kButtonPin, INPUT_PULLUP);
-  button = new DebounceFilter(kButtonPin);
+  button = new DebounceFilter(filter_functions::ForDigitalRead<kButtonPin>());
 
   pinMode(kLedPin, OUTPUT);
 }

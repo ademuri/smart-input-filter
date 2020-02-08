@@ -6,7 +6,7 @@ ExponentialMovingAverageFilter<uint32_t> *input;
 
 void setup() {
   pinMode(kInputPin, INPUT_PULLUP);
-  input = new ExponentialMovingAverageFilter<uint32_t>(kInputPin, 255);
+  input = new ExponentialMovingAverageFilter<uint32_t>(filter_functions::ForAnalogRead<kInputPin>(), 255);
   input->SetLogToSerial(true);
 
   pinMode(kLedPin, OUTPUT);

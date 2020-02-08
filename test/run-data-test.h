@@ -1,6 +1,13 @@
 #ifndef RUN_DATA_TEST
 #define RUN_DATA_TEST
 
+#include "gtest/gtest.h"
+
+#include <cstdint>
+#include <cstdio>
+
+#include "../src/filter.h"
+
 template <typename O>
 struct InputOutput {
   uint32_t input;
@@ -22,8 +29,12 @@ struct InputOutput {
         upper_bound(upper_bound) {}
 };
 
+extern uint32_t analogReadValue;
+extern uint32_t analogRead();
+
 template <typename O>
-void RunDataTest(AnalogFilter<O>* filter, std::vector<InputOutput<O>> data) {
+void RunDataTest(Filter<uint32_t, O>* filter,
+                 std::vector<InputOutput<O>> data) {
   uint32_t millis = 0;
   uint32_t point_index = 0;
   for (auto point : data) {
@@ -33,7 +44,7 @@ void RunDataTest(AnalogFilter<O>* filter, std::vector<InputOutput<O>> data) {
                    << point.input << ")";
 
       filter->SetMillis(millis);
-      filter->SetPinValue(point.input);
+      analogReadValue = point.input;
       filter->Run();
 
       EXPECT_LE(point.lower_bound, filter->GetFilteredValue())

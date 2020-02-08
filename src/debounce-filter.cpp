@@ -1,12 +1,10 @@
 #include "debounce-filter.h"
 
-DebounceFilter::DebounceFilter(uint32_t pin) : pin(pin) {}
+DebounceFilter::DebounceFilter(bool (*const ReadFromSensor)()) : Filter(ReadFromSensor) {}
 
 bool DebounceFilter::Rose() { return rose_; }
 
 bool DebounceFilter::Fell() { return fell_; }
-
-bool DebounceFilter::ReadFromSensor() { return digitalRead(pin); }
 
 bool DebounceFilter::DoRun() {
   rose_ = false;
@@ -25,35 +23,28 @@ bool DebounceFilter::DoRun() {
     }
   }
 
-  bool input_value = ReadFromSensor();
-  if (input_value == current_state_) {
+  if (sensor_value_ == current_state_) {
     return stable_state_;
   }
 
   if (millis() - last_successful_change_at_millis >= kDebounceTimeMillis) {
-    if (stable_state_ != input_value) {
-      if (input_value) {
+    if (stable_state_ != sensor_value_) {
+      if (sensor_value_) {
         rose_ = true;
       } else {
         fell_ = true;
       }
     }
 
-    stable_state_ = input_value;
-    current_state_ = input_value;
+    stable_state_ = sensor_value_;
+    current_state_ = sensor_value_;
     last_successful_change_at_millis = millis();
     state_started_at_millis = millis();
   }
 
   // Input != current_state_
   state_started_at_millis = millis();
-  current_state_ = input_value;
+  current_state_ = sensor_value_;
   return stable_state_;
 }
 
-#ifndef ARDUINO
-int DebounceFilter::digitalRead(uint32_t pin) {
-  (void)pin;
-  return pin_value_;
-}
-#endif

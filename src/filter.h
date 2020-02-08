@@ -3,10 +3,15 @@
 
 #ifdef ARDUINO
 #include <Arduino.h>
+
 #else
 #include <cstdint>
 #include <iostream>
 #include <vector>
+
+// Arduino functions
+extern int digitalRead(uint32_t pin);
+extern uint32_t analogRead(uint32_t pin);
 #endif
 
 // InputType is the input type (e.g. int for digitalRead, uint32_t for
@@ -37,15 +42,9 @@ class Filter {
   // Arduino serial plotter.
   void SetLogToSerial(bool log);
 
-  // Used to construct input function for standard Arduino inputs
-  template <uint32_t pin>
-  static bool (*const ForDigitalRead)();
-
   // Setters for tests
 #ifndef ARDUINO
   void SetMillis(uint32_t value);
-
-  void SetPinValue(InputType value);
 #endif
 
  protected:
@@ -74,8 +73,6 @@ class Filter {
   // Test functions
 #ifndef ARDUINO
   uint32_t millis();
-
-  InputType pin_value_ = 0;
 #endif
 
  private:
@@ -139,20 +136,10 @@ void Filter<InputType, OutputType>::LogState() {
   Serial.println(Convert_(filtered_value_));
 }
 
-template <uint32_t pin>
-static bool (*const Filter::ForDigitalRead)() {
-  return digitalRead(pin);
-}
-
 #ifndef ARDUINO
 template <typename InputType, typename OutputType>
 void Filter<InputType, OutputType>::SetMillis(uint32_t value) {
   fake_millis_ = value;
-}
-
-template <typename InputType, typename OutputType>
-void Filter<InputType, OutputType>::SetPinValue(InputType value) {
-  pin_value_ = value;
 }
 
 template <typename InputType, typename OutputType>
@@ -166,5 +153,17 @@ template <typename InputType, typename OutputType>
 OutputType Filter<InputType, OutputType>::NoOpConvert(InputType input) {
   return (OutputType)input;
 }
+
+namespace filter_functions {
+template <uint32_t pin>
+static bool (*ForDigitalRead())() {
+  return []() { return (bool)digitalRead(pin); };
+}
+
+template <uint32_t pin>
+static uint32_t (*ForAnalogRead())() {
+  return []() { return (uint32_t)analogRead(pin); };
+}
+}  // namespace filter_functions
 
 #endif

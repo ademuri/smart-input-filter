@@ -14,12 +14,14 @@
 // An alpha of 255 means that the filter returns the current value of the input.
 // An alpha of 0 means the filtered value changes very slowly.
 template <typename OutputType>
-class ExponentialMovingAverageFilter : public AnalogFilter<OutputType> {
+class ExponentialMovingAverageFilter : public Filter<uint32_t, OutputType> {
   using Filter<uint32_t, OutputType>::sensor_value_;
 
  public:
-  ExponentialMovingAverageFilter(uint32_t pin, uint8_t alpha);
-  ExponentialMovingAverageFilter(uint32_t pin, uint8_t alpha,
+  ExponentialMovingAverageFilter(uint32_t (*const ReadFromSensor)(),
+                                 uint8_t alpha);
+  ExponentialMovingAverageFilter(uint32_t (*const ReadFromSensor)(),
+                                 uint8_t alpha,
                                  OutputType (*Convert)(uint32_t input));
 
  protected:
@@ -33,13 +35,14 @@ class ExponentialMovingAverageFilter : public AnalogFilter<OutputType> {
 
 template <typename OutputType>
 ExponentialMovingAverageFilter<OutputType>::ExponentialMovingAverageFilter(
-    uint32_t pin, uint8_t alpha)
-    : AnalogFilter<OutputType>(pin), alpha_(alpha) {}
+    uint32_t (*const ReadFromSensor)(), uint8_t alpha)
+    : Filter<uint32_t, OutputType>(ReadFromSensor), alpha_(alpha) {}
 
 template <typename OutputType>
 ExponentialMovingAverageFilter<OutputType>::ExponentialMovingAverageFilter(
-    uint32_t pin, uint8_t alpha, OutputType (*Convert)(uint32_t input))
-    : AnalogFilter<OutputType>(pin, Convert), alpha_(alpha) {}
+    uint32_t (*const ReadFromSensor)(), uint8_t alpha,
+    OutputType (*Convert)(uint32_t input))
+    : Filter<uint32_t, OutputType>(ReadFromSensor, Convert), alpha_(alpha) {}
 
 template <typename OutputType>
 uint32_t ExponentialMovingAverageFilter<OutputType>::DoRun() {

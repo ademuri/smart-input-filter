@@ -11,7 +11,7 @@
 
 #include <list>
 
-#include "analog-filter.h"
+#include "filter.h"
 
 namespace median_filter {
 struct ValuePoint {
@@ -29,12 +29,13 @@ struct ValuePoint {
 //
 // For even sizes, this returns the lower median.
 template <typename OutputType, uint8_t size>
-class MedianFilter : public AnalogFilter<OutputType> {
+class MedianFilter : public Filter<uint32_t, OutputType> {
   using Filter<uint32_t, OutputType>::sensor_value_;
 
  public:
-  MedianFilter(uint32_t pin);
-  MedianFilter(uint32_t pin, OutputType (*Convert)(uint32_t input));
+  MedianFilter(uint32_t (*const ReadFromSensor)());
+  MedianFilter(uint32_t (*const ReadFromSensor)(),
+               OutputType (*Convert)(uint32_t input));
 
  protected:
   uint32_t DoRun() override;
@@ -53,13 +54,13 @@ class MedianFilter : public AnalogFilter<OutputType> {
 };
 
 template <typename OutputType, uint8_t size>
-MedianFilter<OutputType, size>::MedianFilter(uint32_t pin)
-    : AnalogFilter<OutputType>(pin) {}
+MedianFilter<OutputType, size>::MedianFilter(uint32_t (*const ReadFromSensor)())
+    : Filter<uint32_t, OutputType>(ReadFromSensor) {}
 
 template <typename OutputType, uint8_t size>
 MedianFilter<OutputType, size>::MedianFilter(
-    uint32_t pin, OutputType (*Convert)(uint32_t input))
-    : AnalogFilter<OutputType>(pin, Convert) {}
+    uint32_t (*const ReadFromSensor)(), OutputType (*Convert)(uint32_t input))
+    : Filter<uint32_t, OutputType>(ReadFromSensor, Convert) {}
 
 template <typename OutputType, uint8_t size>
 uint32_t MedianFilter<OutputType, size>::DoRun() {
