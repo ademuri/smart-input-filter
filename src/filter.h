@@ -36,6 +36,14 @@ class Filter {
   // Returns the output of the filter, converted.
   OutputType GetFilteredValue();
 
+  // Instructs the filter to run no more frequently than this delay. This can be
+  // used to run the filter at a defined rate, which can make the filter more
+  // consistent.
+  //
+  // One way to use this is to measure how long your main loop typically takes,
+  // and set this to value several times that.
+  void SetMinRunInterval(uint32_t interval_millis);
+
   // Controls whether to log the input and output values of this filter. Values
   // are logged to Serial in the form <input> <output>. Both input and output
   // are converted before logging. These values can be graphed using the
@@ -79,6 +87,7 @@ class Filter {
   static OutputType NoOpConvert(InputType input);
 
   InputType filtered_value_ = 0;
+  uint32_t min_run_interval_ = 0;
   uint32_t run_at_ = 0;
   bool log_to_serial_ = false;
 
@@ -111,6 +120,8 @@ void Filter<InputType, OutputType>::Run() {
     if (log_to_serial_) {
       LogState();
     }
+    // Note: if min_run_interval_ is 0 (default), this will have no effect
+    SetRunDelayInMillis(min_run_interval_);
   }
 }
 
@@ -122,6 +133,16 @@ void Filter<InputType, OutputType>::SetLogToSerial(bool log) {
 template <typename InputType, typename OutputType>
 OutputType Filter<InputType, OutputType>::GetFilteredValue() {
   return Convert_(filtered_value_);
+}
+
+template <typename InputType, typename OutputType>
+void Filter<InputType, OutputType>::SetMinRunInterval(
+    uint32_t interval_millis) {
+  min_run_interval_ = interval_millis;
+
+  if (run_at_ - millis() > interval_millis) {
+    run_at_ = millis() + interval_millis;
+  }
 }
 
 template <typename InputType, typename OutputType>

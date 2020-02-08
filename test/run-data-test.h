@@ -47,9 +47,9 @@ void RunDataTest(Filter<uint32_t, O>* filter,
       analogReadValue = point.input;
       filter->Run();
 
-      EXPECT_LE(point.lower_bound, filter->GetFilteredValue())
+      EXPECT_GE(filter->GetFilteredValue(), point.lower_bound)
           << debug_stream.str();
-      EXPECT_GE(point.upper_bound, filter->GetFilteredValue())
+      EXPECT_LE(filter->GetFilteredValue(), point.upper_bound)
           << debug_stream.str();
 
       millis++;
