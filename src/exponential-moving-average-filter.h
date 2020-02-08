@@ -3,6 +3,8 @@
 
 #include "filter.h"
 
+#include <type_traits>
+
 // An exponential moving average filter. This uses only integer (32-bit) math.
 // This supports up to 24-bit inputs.
 //
@@ -13,47 +15,54 @@
 //
 // An alpha of 255 means that the filter returns the current value of the input.
 // An alpha of 0 means the filtered value changes very slowly.
-template <typename OutputType>
-class ExponentialMovingAverageFilter : public Filter<uint32_t, OutputType> {
-  using Filter<uint32_t, OutputType>::sensor_value_;
+template <typename InputType, typename OutputType>
+class ExponentialMovingAverageFilter : public Filter<InputType, OutputType> {
+  using Filter<InputType, OutputType>::sensor_value_;
 
  public:
-  ExponentialMovingAverageFilter(uint32_t (*const ReadFromSensor)(),
-                                 uint8_t alpha);
-  ExponentialMovingAverageFilter(uint32_t (*const ReadFromSensor)(),
-                                 uint8_t alpha,
-                                 OutputType (*Convert)(uint32_t input));
+  ExponentialMovingAverageFilter(InputType (*const ReadFromSensor)(),
+                                 InputType alpha);
+  ExponentialMovingAverageFilter(InputType (*const ReadFromSensor)(),
+                                 InputType alpha,
+                                 OutputType (*Convert)(InputType input));
 
  protected:
-  uint32_t DoRun() override;
+  InputType DoRun() override;
 
  private:
-  uint32_t average_ = 0;
+  InputType average_ = 0;
 
-  const uint8_t alpha_;
+  const InputType alpha_;
 };
 
-template <typename OutputType>
-ExponentialMovingAverageFilter<OutputType>::ExponentialMovingAverageFilter(
-    uint32_t (*const ReadFromSensor)(), uint8_t alpha)
-    : Filter<uint32_t, OutputType>(ReadFromSensor), alpha_(alpha) {}
+template <typename InputType, typename OutputType>
+ExponentialMovingAverageFilter<InputType, OutputType>::
+    ExponentialMovingAverageFilter(InputType (*const ReadFromSensor)(),
+                                   InputType alpha)
+    : Filter<InputType, OutputType>(ReadFromSensor), alpha_(alpha) {}
 
-template <typename OutputType>
-ExponentialMovingAverageFilter<OutputType>::ExponentialMovingAverageFilter(
-    uint32_t (*const ReadFromSensor)(), uint8_t alpha,
-    OutputType (*Convert)(uint32_t input))
-    : Filter<uint32_t, OutputType>(ReadFromSensor, Convert), alpha_(alpha) {}
+template <typename InputType, typename OutputType>
+ExponentialMovingAverageFilter<InputType, OutputType>::
+    ExponentialMovingAverageFilter(InputType (*const ReadFromSensor)(),
+                                   InputType alpha,
+                                   OutputType (*Convert)(InputType input))
+    : Filter<InputType, OutputType>(ReadFromSensor, Convert), alpha_(alpha) {}
 
-template <typename OutputType>
-uint32_t ExponentialMovingAverageFilter<OutputType>::DoRun() {
-  uint32_t old_average = average_;
-  average_ = (sensor_value_ * (alpha_ + 1) + (average_ * (255 - alpha_))) / 256;
-  if (old_average == average_ && sensor_value_ != average_) {
-    if (sensor_value_ > average_) {
-      average_++;
-    } else if (sensor_value_ < average_) {
-      average_--;
+template <typename InputType, typename OutputType>
+InputType ExponentialMovingAverageFilter<InputType, OutputType>::DoRun() {
+  InputType old_average = average_;
+  if (std::is_integral<InputType>::value) {
+    average_ =
+        (sensor_value_ * (alpha_ + 1) + (average_ * (255 - alpha_))) / 256;
+    if (old_average == average_ && sensor_value_ != average_) {
+      if (sensor_value_ > average_) {
+        average_++;
+      } else if (sensor_value_ < average_) {
+        average_--;
+      }
     }
+  } else {
+    average_ = (sensor_value_ * (alpha_) + (average_ * (1.0 - alpha_)));
   }
   return average_;
 }
