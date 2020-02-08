@@ -50,7 +50,7 @@ By default, the filter will not convert the output (beyond filtering it). You ca
 
 ## Extending
 
-The filters default to using `digitalRead` and `analogRead` as inputs. If you want to use these filters with a different kind of input device, extend the filter class and override the `ReadFromSensor` method. For example, if you have a one-wire temperature device, you would perform the read from that device in `ReadFromSensor`.
+The filters can use `digitalRead` and `analogRead` as inputs by passing `filter_functions::ForDigitalRead` or `filter_functions::ForAnalogRead`. If you want to use these filters with a different kind of input device, pass in a different `ReadFromSensor` function to the constructor. See the debounce example for how to do this.
 
 ## Building
 
