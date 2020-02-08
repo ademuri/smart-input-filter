@@ -182,6 +182,11 @@ static bool (*ForDigitalRead())() {
 }
 
 template <uint32_t pin>
+static bool (*ForInvertedDigitalRead())() {
+  return []() { return (bool)!digitalRead(pin); };
+}
+
+template <uint32_t pin>
 static uint32_t (*ForAnalogRead())() {
   return []() { return (uint32_t)analogRead(pin); };
 }

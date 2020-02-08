@@ -19,6 +19,9 @@ void setup() {
   // Typical usage: with a normal digital input
   button = new DebounceFilter(filter_functions::ForDigitalRead<kButtonPin>());
 
+  // For an inverted input, e.g. when using a button with a pullup resistor
+  button = new DebounceFilter(filter_functions::ForInvertedDigitalRead<kButtonPin>());
+
   // Advanced usage: custom input function
   button = new DebounceFilter(readButtonPin);
 
