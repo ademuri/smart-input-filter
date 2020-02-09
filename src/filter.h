@@ -4,6 +4,14 @@
 #ifdef ARDUINO
 #include <Arduino.h>
 
+// The AVR gcc compiler doesn't have a lot of STL. On those platforms (e.g. the
+// Uno), include the ArduinoSTL library which provides some of that
+// functionality. You'll need to install the library  (typically through the
+// Arduino library manager).
+#ifdef __AVR__
+#include <ArduinoSTL.h>
+#endif
+
 #else
 #include <cstdint>
 #include <iostream>
