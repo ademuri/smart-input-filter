@@ -8,7 +8,8 @@
 // latency).
 class DebounceFilter : public Filter<bool, bool> {
  public:
-  DebounceFilter(bool (*const ReadFromSensor)());
+  DebounceFilter(
+      typename Filter<bool, bool>::ReadFromSensorType ReadFromSensor);
 
   // Whether the input rose this cycle. Reset on the next call to Run.
   bool Rose();

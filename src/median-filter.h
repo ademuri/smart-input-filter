@@ -1,17 +1,9 @@
 #ifndef SMART_INPUT_FILTER_MEDIAN_FILTER
 #define SMART_INPUT_FILTER_MEDIAN_FILTER
 
-#ifdef ARDUINO
-// Arduino.h, automatically included by the IDE, defines min and max macros
-// (which it shouldn't). Apparently FastLED depends on them, so don't undef
-// them until FastLED has been included.
-#undef max
-#undef min
-#endif
+#include "filter.h"
 
 #include <list>
-
-#include "filter.h"
 
 namespace median_filter {
 template <typename ValueType>
@@ -34,9 +26,11 @@ class MedianFilter : public Filter<InputType, OutputType> {
   using Filter<InputType, OutputType>::sensor_value_;
 
  public:
-  MedianFilter(InputType (*const ReadFromSensor)());
-  MedianFilter(InputType (*const ReadFromSensor)(),
-               OutputType (*Convert)(InputType input));
+  MedianFilter(typename Filter<InputType, OutputType>::ReadFromSensorType
+                   ReadFromSensor);
+  MedianFilter(
+      typename Filter<InputType, OutputType>::ReadFromSensorType ReadFromSensor,
+      OutputType (*Convert)(InputType input));
 
  protected:
   InputType DoRun() override;
@@ -56,12 +50,13 @@ class MedianFilter : public Filter<InputType, OutputType> {
 
 template <typename InputType, typename OutputType, uint8_t size>
 MedianFilter<InputType, OutputType, size>::MedianFilter(
-    InputType (*const ReadFromSensor)())
+    typename Filter<InputType, OutputType>::ReadFromSensorType ReadFromSensor)
     : Filter<InputType, OutputType>(ReadFromSensor) {}
 
 template <typename InputType, typename OutputType, uint8_t size>
 MedianFilter<InputType, OutputType, size>::MedianFilter(
-    InputType (*const ReadFromSensor)(), OutputType (*Convert)(InputType input))
+    typename Filter<InputType, OutputType>::ReadFromSensorType ReadFromSensor,
+    OutputType (*Convert)(InputType input))
     : Filter<InputType, OutputType>(ReadFromSensor, Convert) {}
 
 template <typename InputType, typename OutputType, uint8_t size>

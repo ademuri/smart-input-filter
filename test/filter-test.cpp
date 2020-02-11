@@ -8,7 +8,7 @@ namespace filter_test {
 
 TEST(Filter, SetMinRunInterval_default) {
   // Filter that returns the sensor value immediately
-  ExponentialMovingAverageFilter<uint32_t> *input = new ExponentialMovingAverageFilter<uint32_t>(analogRead, 255);
+  ExponentialMovingAverageFilter<uint32_t> *input = new ExponentialMovingAverageFilter<uint32_t>(analog_read_function, 255);
   std::vector<InputOutput<uint32_t, uint32_t>> data = {
     {1, 1, 1},
     {2, 1, 2},
@@ -21,7 +21,7 @@ TEST(Filter, SetMinRunInterval_default) {
 
 TEST(Filter, SetMinRunInterval_10) {
   // Filter that returns the sensor value immediately
-  ExponentialMovingAverageFilter<uint32_t> *input = new ExponentialMovingAverageFilter<uint32_t>(analogRead, 255);
+  ExponentialMovingAverageFilter<uint32_t> *input = new ExponentialMovingAverageFilter<uint32_t>(analog_read_function, 255);
   input->SetMinRunInterval(10);
   std::vector<InputOutput<uint32_t, uint32_t>> data = {
     {1, 1, 1},
@@ -36,7 +36,7 @@ TEST(Filter, SetMinRunInterval_10) {
 }
 
 TEST(Filter, SetMinRunInterval_updates) {
-  ExponentialMovingAverageFilter<uint32_t> *input = new ExponentialMovingAverageFilter<uint32_t>(analogRead, 255);
+  ExponentialMovingAverageFilter<uint32_t> *input = new ExponentialMovingAverageFilter<uint32_t>(analog_read_function, 255);
   input->SetMinRunInterval(10);
   input->SetMillis(0);
   analogReadValue = 1;

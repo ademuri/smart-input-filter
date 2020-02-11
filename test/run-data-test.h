@@ -29,12 +29,12 @@ struct InputOutput {
 };
 
 extern uint32_t analogReadValue;
-extern uint32_t analogRead();
 extern void setAnalogRead(uint32_t value);
+const auto analog_read_function = []() { return analogReadValue; };
 
 extern float floatReadValue;
-extern float floatRead();
 extern void setFloatRead(float value);
+const auto float_read_function = []() { return floatReadValue; };
 
 template <typename I, typename O>
 void RunDataTest(Filter<I, O>* filter, std::vector<InputOutput<I, O>> data,

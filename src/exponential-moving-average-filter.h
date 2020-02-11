@@ -18,11 +18,12 @@ class ExponentialMovingAverageFilter : public Filter<uint32_t, OutputType> {
   using Filter<uint32_t, OutputType>::sensor_value_;
 
  public:
-  ExponentialMovingAverageFilter(uint32_t (*const ReadFromSensor)(),
-                                 uint8_t alpha);
-  ExponentialMovingAverageFilter(uint32_t (*const ReadFromSensor)(),
-                                 uint8_t alpha,
-                                 OutputType (*Convert)(uint32_t input));
+  ExponentialMovingAverageFilter(
+      typename Filter<uint32_t, OutputType>::ReadFromSensorType ReadFromSensor,
+      uint8_t alpha);
+  ExponentialMovingAverageFilter(
+      typename Filter<uint32_t, OutputType>::ReadFromSensorType ReadFromSensor,
+      uint8_t alpha, OutputType (*Convert)(uint32_t input));
 
  protected:
   uint32_t DoRun() override;
@@ -35,13 +36,14 @@ class ExponentialMovingAverageFilter : public Filter<uint32_t, OutputType> {
 
 template <typename OutputType>
 ExponentialMovingAverageFilter<OutputType>::ExponentialMovingAverageFilter(
-    uint32_t (*const ReadFromSensor)(), uint8_t alpha)
+    typename Filter<uint32_t, OutputType>::ReadFromSensorType ReadFromSensor,
+    uint8_t alpha)
     : Filter<uint32_t, OutputType>(ReadFromSensor), alpha_(alpha) {}
 
 template <typename OutputType>
 ExponentialMovingAverageFilter<OutputType>::ExponentialMovingAverageFilter(
-    uint32_t (*const ReadFromSensor)(), uint8_t alpha,
-    OutputType (*Convert)(uint32_t input))
+    typename Filter<uint32_t, OutputType>::ReadFromSensorType ReadFromSensor,
+    uint8_t alpha, OutputType (*Convert)(uint32_t input))
     : Filter<uint32_t, OutputType>(ReadFromSensor, Convert), alpha_(alpha) {}
 
 template <typename OutputType>

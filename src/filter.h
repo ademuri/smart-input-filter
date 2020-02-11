@@ -4,6 +4,12 @@
 #ifdef ARDUINO
 #include <Arduino.h>
 
+// Arduino.h, automatically included by the IDE, defines min and max macros
+// (which it shouldn't). Apparently FastLED depends on them, so don't undef
+// them until FastLED has been included.
+#undef max
+#undef min
+
 // The AVR gcc compiler doesn't have a lot of STL. On those platforms (e.g. the
 // Uno), include the ArduinoSTL library which provides some of that
 // functionality. You'll need to install the library  (typically through the
@@ -22,18 +28,30 @@ extern int digitalRead(uint32_t pin);
 extern uint32_t analogRead(uint32_t pin);
 #endif
 
+#include <functional>
+
 // InputType is the input type (e.g. int for digitalRead, uint32_t for
 // analogRead). OutputType is the output type. The filter converts from the
 // input type to the output type (with the default being no conversion).
 template <typename InputType, typename OutputType>
 class Filter {
  public:
+#ifdef __AVR__
+  // avr-gcc doesn't have std::function - fortunately, std::function is
+  // "backwards-compatible" with raw function pointers.
+  typedef InputType (*const ReadFromSensorType)();
+#else
+  // On modern platforms that have std::function, this allows callers to e.g.
+  // use `bind` here.
+  typedef std::function<InputType()> ReadFromSensorType;
+#endif
+
   // Default constructor uses a no-op converter.
-  Filter(InputType (*const ReadFromSensor)())
+  Filter(ReadFromSensorType ReadFromSensor)
       : ReadFromSensor_(ReadFromSensor),
         Convert_(Filter<InputType, OutputType>::NoOpConvert) {}
 
-  Filter(InputType (*const ReadFromSensor)(),
+  Filter(ReadFromSensorType ReadFromSensor,
          OutputType (*Convert)(InputType input))
       : ReadFromSensor_(ReadFromSensor), Convert_(Convert) {}
 
@@ -72,7 +90,7 @@ class Filter {
   virtual InputType DoRun() = 0;
 
   // Gets the raw value of the sensor.
-  InputType (*const ReadFromSensor_)();
+  ReadFromSensorType ReadFromSensor_;
 
   // Converts from the sensor type to the usage type (e.g. converting from a
   // 10-bit uint32_t that analogRead returns to a voltage).
@@ -184,18 +202,26 @@ OutputType Filter<InputType, OutputType>::NoOpConvert(InputType input) {
 }
 
 namespace filter_functions {
+#ifdef __AVR__
+typedef bool (*BoolFunction)();
+typedef uint32_t (*Uint32Function)();
+#else
+typedef std::function<bool()> BoolFunction;
+typedef std::function<uint32_t()> Uint32Function;
+#endif
+
 template <uint32_t pin>
-static bool (*ForDigitalRead())() {
+static BoolFunction ForDigitalRead() {
   return []() { return (bool)digitalRead(pin); };
 }
 
 template <uint32_t pin>
-static bool (*ForInvertedDigitalRead())() {
+static BoolFunction ForInvertedDigitalRead() {
   return []() { return (bool)!digitalRead(pin); };
 }
 
 template <uint32_t pin>
-static uint32_t (*ForAnalogRead())() {
+static Uint32Function ForAnalogRead() {
   return []() { return (uint32_t)analogRead(pin); };
 }
 }  // namespace filter_functions

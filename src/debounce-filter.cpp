@@ -1,6 +1,6 @@
 #include "debounce-filter.h"
 
-DebounceFilter::DebounceFilter(bool (*const ReadFromSensor)()) : Filter(ReadFromSensor) {}
+DebounceFilter::DebounceFilter(typename Filter<bool, bool>::ReadFromSensorType ReadFromSensor) : Filter(ReadFromSensor) {}
 
 bool DebounceFilter::Rose() { return rose_; }
 
