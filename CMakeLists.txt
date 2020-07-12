@@ -23,8 +23,8 @@ file(GLOB LIBRARY_SOURCES "src/*.cpp")
 add_library(smart-input-filter ${LIBRARY_SOURCES})
 
 target_include_directories(smart-input-filter PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR/src}>
-  $<INSTALL_INTERFACE:.>)
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<INSTALL_INTERFACE:src>)
 
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) 
