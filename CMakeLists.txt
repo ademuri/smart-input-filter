@@ -20,9 +20,9 @@ include(FetchContent)
 include(fetch)
 
 file(GLOB LIBRARY_SOURCES "src/*.cpp")
-add_library(filter ${LIBRARY_SOURCES})
+add_library(smart-input-filter ${LIBRARY_SOURCES})
 
-target_include_directories(filter PUBLIC
+target_include_directories(smart-input-filter PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR/src}>
   $<INSTALL_INTERFACE:.>)
 
@@ -40,6 +40,6 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
   add_executable(filtertest ${TEST_SOURCES})
 
-  target_link_libraries(filtertest filter gmock_main gtest)
+  target_link_libraries(filtertest smart-input-filter gmock_main gtest)
   add_test(filtertest filtertest)
 endif()
