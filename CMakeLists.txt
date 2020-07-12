@@ -1,16 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.11)
 project(smart-input-filter LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 11)
-
-# Download GoogleTest for mocks and test runner.
-include(third_party/DownloadProject/DownloadProject.cmake)
-download_project(PROJ                googletest
-                 GIT_REPOSITORY      https://github.com/google/googletest.git
-                 GIT_TAG             master
-                 UPDATE_DISCONNECTED 1
-)
-
-add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 
 # Set appropriate warning levels and include debug symbols.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++11 -g")
@@ -23,6 +13,17 @@ IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
     ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json
   )
 ENDIF()
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+include(FetchContent)
+include(fetch)
+
+FetchContent_Declare(googletest
+  GIT_REPOSITORY      https://github.com/google/googletest.git
+  GIT_TAG             master
+)
+FetchContent_MakeAvailable(googletest)
 
 file(GLOB LIBRARY_SOURCES "src/*.cpp")
 add_library(filter ${LIBRARY_SOURCES})
