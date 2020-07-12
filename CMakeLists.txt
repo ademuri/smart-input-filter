@@ -19,12 +19,6 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(FetchContent)
 include(fetch)
 
-FetchContent_Declare(googletest
-  GIT_REPOSITORY      https://github.com/google/googletest.git
-  GIT_TAG             master
-)
-FetchContent_MakeAvailable(googletest)
-
 file(GLOB LIBRARY_SOURCES "src/*.cpp")
 add_library(filter ${LIBRARY_SOURCES})
 
@@ -32,11 +26,20 @@ target_include_directories(filter PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR/src}>
   $<INSTALL_INTERFACE:.>)
 
-enable_testing()
+# Only do these if this is the main project, and not if it is included through add_subdirectory
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) 
+  FetchContent_Declare(googletest
+    GIT_REPOSITORY      https://github.com/google/googletest.git
+    GIT_TAG             master
+  )
+  FetchContent_MakeAvailable(googletest)
 
-file(GLOB TEST_SOURCES "test/*.cpp")
+  enable_testing()
 
-add_executable(filtertest ${TEST_SOURCES})
+  file(GLOB TEST_SOURCES "test/*.cpp")
 
-target_link_libraries(filtertest filter gmock_main gtest)
-add_test(filtertest filtertest)
+  add_executable(filtertest ${TEST_SOURCES})
+
+  target_link_libraries(filtertest filter gmock_main gtest)
+  add_test(filtertest filtertest)
+endif()
