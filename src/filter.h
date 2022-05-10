@@ -226,12 +226,16 @@ static Uint32Function ForAnalogRead() {
 }
 
 #ifndef __AVR__
-static BoolFunction ForDigitalReadDynamic(int pin) {
-  return [&pin]() { return (bool)digitalRead(pin); };
+static BoolFunction ForDigitalReadDynamic(unsigned int pin) {
+  return [pin]() { return (bool)digitalRead(pin); };
 }
 
-static BoolFunction ForInvertedDigitalReadDynamic(int pin) {
-  return [&pin]() { return (bool)!digitalRead(pin); };
+static BoolFunction ForInvertedDigitalReadDynamic(unsigned int pin) {
+  return [pin]() { return (bool)!digitalRead(pin); };
+}
+
+static Uint32Function ForAnalogReadDynamic(unsigned int pin) {
+  return [pin]() { return (uint32_t)analogRead(pin); };
 }
 #endif  // __AVR__
 }  // namespace filter_functions
