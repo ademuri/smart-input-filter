@@ -224,6 +224,14 @@ template <uint32_t pin>
 static Uint32Function ForAnalogRead() {
   return []() { return (uint32_t)analogRead(pin); };
 }
+
+static BoolFunction ForDigitalReadDynamic(int pin) {
+  return [&pin]() { return (bool)digitalRead(pin); };
+}
+
+static BoolFunction ForInvertedDigitalReadDynamic(int pin) {
+  return [&pin]() { return (bool)!digitalRead(pin); };
+}
 }  // namespace filter_functions
 
 #endif

@@ -1,9 +1,9 @@
 #ifndef SMART_INPUT_FILTER_MEDIAN_FILTER
 #define SMART_INPUT_FILTER_MEDIAN_FILTER
 
-#include "filter.h"
-
 #include <list>
+
+#include "filter.h"
 
 namespace median_filter {
 template <typename ValueType>

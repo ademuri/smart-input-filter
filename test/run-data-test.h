@@ -1,12 +1,11 @@
 #ifndef RUN_DATA_TEST
 #define RUN_DATA_TEST
 
-#include "gtest/gtest.h"
-
 #include <cstdint>
 #include <cstdio>
 
 #include "../src/filter.h"
+#include "gtest/gtest.h"
 
 template <typename I, typename O>
 struct InputOutput {
