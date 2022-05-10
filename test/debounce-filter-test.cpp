@@ -2,6 +2,11 @@
 
 #include "../src/debounce-filter.h"
 
+bool digitalReadValue = false;
+int digitalRead(uint32_t pin) {
+  return digitalReadValue;
+}
+
 namespace debounce_filter_test {
 
 enum class StateChange {
@@ -17,8 +22,7 @@ struct InputOutput {
   StateChange state_change;
 };
 
-bool digitalReadValue = false;
-bool digitalRead() {
+bool fakeDigitalRead() {
   return digitalReadValue;
 }
 
@@ -57,7 +61,7 @@ void RunDataTest(DebounceFilter* filter, std::vector<InputOutput> &data) {
 }
 
 TEST(DebounceFilter, stable_filter_no_change) {
-  DebounceFilter* filter = new DebounceFilter(digitalRead);
+  DebounceFilter* filter = new DebounceFilter(fakeDigitalRead);
   std::vector<InputOutput> data = {
       // clang-format off
     {0, false, 1000, StateChange::kNone},
@@ -69,7 +73,7 @@ TEST(DebounceFilter, stable_filter_no_change) {
 }
 
 TEST(DebounceFilter, stable_short_blip) {
-  DebounceFilter* filter = new DebounceFilter(digitalRead);
+  DebounceFilter* filter = new DebounceFilter(fakeDigitalRead);
   std::vector<InputOutput> data = {
       // clang-format off
     {0, false, 1000, StateChange::kNone},
@@ -82,7 +86,7 @@ TEST(DebounceFilter, stable_short_blip) {
 }
 
 TEST(DebounceFilter, stable_oscillation_low_to_high) {
-  DebounceFilter* filter = new DebounceFilter(digitalRead);
+  DebounceFilter* filter = new DebounceFilter(fakeDigitalRead);
   std::vector<InputOutput> data = {
       // clang-format off
     {0, false, 1000, StateChange::kNone},
@@ -98,7 +102,7 @@ TEST(DebounceFilter, stable_oscillation_low_to_high) {
 }
 
 TEST(DebounceFilter, stable_oscillation_high_to_low) {
-  DebounceFilter* filter = new DebounceFilter(digitalRead);
+  DebounceFilter* filter = new DebounceFilter(fakeDigitalRead);
   std::vector<InputOutput> data = {
       // clang-format off
     {0, false, 10, StateChange::kNone},
@@ -116,7 +120,7 @@ TEST(DebounceFilter, stable_oscillation_high_to_low) {
 }
 
 TEST(DebounceFilter, stable_oscillation_back_to_original_value) {
-  DebounceFilter* filter = new DebounceFilter(digitalRead);
+  DebounceFilter* filter = new DebounceFilter(fakeDigitalRead);
   std::vector<InputOutput> data = {
       // clang-format off
     {0, false, 10, StateChange::kNone},
@@ -135,7 +139,7 @@ TEST(DebounceFilter, stable_oscillation_back_to_original_value) {
 }
 
 TEST(DebounceFilter, fast_change) {
-  DebounceFilter* filter = new DebounceFilter(digitalRead);
+  DebounceFilter* filter = new DebounceFilter(fakeDigitalRead);
   std::vector<InputOutput> data = {
       // clang-format off
     {0, false, 10, StateChange::kNone},
@@ -149,7 +153,7 @@ TEST(DebounceFilter, fast_change) {
 }
 
 TEST(DebounceFilter, very_fast_change) {
-  DebounceFilter* filter = new DebounceFilter(digitalRead);
+  DebounceFilter* filter = new DebounceFilter(fakeDigitalRead);
   std::vector<InputOutput> data = {
       // clang-format off
     {0, false, 10, StateChange::kNone},

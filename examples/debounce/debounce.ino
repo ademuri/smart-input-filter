@@ -16,11 +16,21 @@ bool readButtonPin() {
 
 void setup() {
   pinMode(kButtonPin, INPUT_PULLUP);
-  // Typical usage: with a normal digital input
+  // Typical usage: with a normal digital input, pin number available at compile
+  // time
   button = new DebounceFilter(filter_functions::ForDigitalRead<kButtonPin>());
 
+  // Like the above, but with the pin determined at runtime
+  button =
+      new DebounceFilter(filter_functions::ForDigitalReadDynamic(random(10)));
+
   // For an inverted input, e.g. when using a button with a pullup resistor
-  button = new DebounceFilter(filter_functions::ForInvertedDigitalRead<kButtonPin>());
+  button = new DebounceFilter(
+      filter_functions::ForInvertedDigitalRead<kButtonPin>());
+
+  // Like the above, but with the pin determined at runtime
+  button = new DebounceFilter(
+      filter_functions::ForInvertedDigitalReadDynamic(random(10)));
 
   // Advanced usage: custom input function
   button = new DebounceFilter(readButtonPin);
