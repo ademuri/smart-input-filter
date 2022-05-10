@@ -4,6 +4,10 @@
 #include "../src/median-filter.h"
 #include "run-data-test.h"
 
+unsigned int analogRead(unsigned int) {
+  return 0;
+}
+
 namespace median_filter_input_test {
 
 TEST(MedianFilter, loading_in_order) {
