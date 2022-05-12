@@ -30,7 +30,9 @@ For even sizes, this returns the lower median.
 
 ## Installation
 
-Install this library by placing a copy of it in your `Arduino/libraries` folder.
+If you're using PlatformIO, add `ademuri/smart-input-filter@^0.3.0` to your `lib_deps`.
+
+If you're using the Arduino IDE, install this library by placing a copy of it in your `Arduino/libraries` folder.
 
 If you're on a platform that doesn't have some of the C++ STL libraries (e.g. the Arduino Uno), install the [`ArduinoSTL`](https://github.com/mike-matera/ArduinoSTL) library through the Arduino library manager.
 
@@ -66,6 +68,6 @@ To check that all code builds for Arduino, run `build_arduino.sh`. To run the un
 
 ## Status
 
-SmartInputFilter is under active development. I'm not yet using it in any of my own projects, so the API may change.
+I'm using this library in several of my projects, and adding features as needed.
 
 All filters have pretty good unit test coverage. Check `build_arduino.sh` for the Arduino platforms that this is compiled against.
