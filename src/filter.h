@@ -211,30 +211,30 @@ typedef std::function<uint32_t()> Uint32Function;
 #endif
 
 template <uint32_t pin>
-static BoolFunction ForDigitalRead() {
+inline BoolFunction ForDigitalRead() {
   return []() { return (bool)digitalRead(pin); };
 }
 
 template <uint32_t pin>
-static BoolFunction ForInvertedDigitalRead() {
+inline BoolFunction ForInvertedDigitalRead() {
   return []() { return (bool)!digitalRead(pin); };
 }
 
 template <uint32_t pin>
-static Uint32Function ForAnalogRead() {
+inline Uint32Function ForAnalogRead() {
   return []() { return (uint32_t)analogRead(pin); };
 }
 
 #ifndef __AVR__
-static BoolFunction ForDigitalReadDynamic(unsigned int pin) {
+inline BoolFunction ForDigitalReadDynamic(unsigned int pin) {
   return [pin]() { return (bool)digitalRead(pin); };
 }
 
-static BoolFunction ForInvertedDigitalReadDynamic(unsigned int pin) {
+inline BoolFunction ForInvertedDigitalReadDynamic(unsigned int pin) {
   return [pin]() { return (bool)!digitalRead(pin); };
 }
 
-static Uint32Function ForAnalogReadDynamic(unsigned int pin) {
+inline Uint32Function ForAnalogReadDynamic(unsigned int pin) {
   return [pin]() { return (uint32_t)analogRead(pin); };
 }
 #endif  // __AVR__
