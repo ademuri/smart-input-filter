@@ -30,7 +30,7 @@ For even sizes, this returns the lower median.
 
 ## Installation
 
-If you're using PlatformIO, add `ademuri/smart-input-filter@^0.3.0` to your `lib_deps`.
+If you're using PlatformIO, add `ademuri/smart-input-filter@^0.3.1` to your `lib_deps`.
 
 If you're using the Arduino IDE, install this library by placing a copy of it in your `Arduino/libraries` folder.
 
