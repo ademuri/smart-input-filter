@@ -60,7 +60,7 @@ class Filter {
   void Run();
 
   // Returns the output of the filter, converted.
-  OutputType GetFilteredValue();
+  OutputType GetFilteredValue() const;
 
   // Instructs the filter to run no more frequently than this delay. This can be
   // used to run the filter at a defined rate, which can make the filter more
@@ -157,7 +157,7 @@ void Filter<InputType, OutputType>::SetLogToSerial(bool log) {
 }
 
 template <typename InputType, typename OutputType>
-OutputType Filter<InputType, OutputType>::GetFilteredValue() {
+OutputType Filter<InputType, OutputType>::GetFilteredValue() const {
   return Convert_(filtered_value_);
 }
 
