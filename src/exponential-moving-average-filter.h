@@ -25,6 +25,8 @@ class ExponentialMovingAverageFilter : public Filter<uint32_t, OutputType> {
       typename Filter<uint32_t, OutputType>::ReadFromSensorType ReadFromSensor,
       uint8_t alpha, OutputType (*Convert)(uint32_t input));
 
+  void Initialize(uint32_t average);
+
  protected:
   uint32_t DoRun() override;
 
@@ -58,6 +60,11 @@ uint32_t ExponentialMovingAverageFilter<OutputType>::DoRun() {
     }
   }
   return average_;
+}
+
+template <typename OutputType>
+void ExponentialMovingAverageFilter<OutputType>::Initialize(uint32_t average) {
+  average_ = average;
 }
 
 #endif
