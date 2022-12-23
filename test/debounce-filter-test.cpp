@@ -1,11 +1,9 @@
-#include "gtest/gtest.h"
-
 #include "../src/debounce-filter.h"
 
+#include "gtest/gtest.h"
+
 bool digitalReadValue = false;
-int digitalRead(uint32_t pin) {
-  return digitalReadValue;
-}
+int digitalRead(uint32_t pin) { return digitalReadValue; }
 
 namespace debounce_filter_test {
 
@@ -22,11 +20,9 @@ struct InputOutput {
   StateChange state_change;
 };
 
-bool fakeDigitalRead() {
-  return digitalReadValue;
-}
+bool fakeDigitalRead() { return digitalReadValue; }
 
-void RunDataTest(DebounceFilter* filter, std::vector<InputOutput> &data) {
+void RunDataTest(DebounceFilter* filter, std::vector<InputOutput>& data) {
   uint32_t millis = 0;
   for (auto point : data) {
     for (uint32_t i = 0; i < point.duration_millis; i++) {
@@ -167,4 +163,4 @@ TEST(DebounceFilter, very_fast_change) {
   RunDataTest(filter, data);
 }
 
-}
+}  // namespace debounce_filter_test

@@ -1,6 +1,8 @@
 #include "debounce-filter.h"
 
-DebounceFilter::DebounceFilter(typename Filter<bool, bool>::ReadFromSensorType ReadFromSensor) : Filter(ReadFromSensor) {}
+DebounceFilter::DebounceFilter(
+    typename Filter<bool, bool>::ReadFromSensorType ReadFromSensor)
+    : Filter(ReadFromSensor) {}
 
 bool DebounceFilter::Rose() { return rose_; }
 
@@ -47,4 +49,3 @@ bool DebounceFilter::DoRun() {
   current_state_ = sensor_value_;
   return stable_state_;
 }
-
