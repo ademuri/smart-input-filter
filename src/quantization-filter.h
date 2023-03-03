@@ -2,6 +2,9 @@
 
 #include "filter.h"
 
+// Quantizes the input into buckets of size `bucket_size`, with optional
+// hysteresis. This can be used as an anti-aliasing/oversampling filter, e.g. for a
+// potentiometer to prevent flickering between adjacent values.
 template <typename InputType>
 class QuantizationFilter : public Filter<InputType, InputType> {
   using Filter<InputType, InputType>::sensor_value_;
