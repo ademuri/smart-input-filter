@@ -13,10 +13,10 @@ class EdgeFilter : public Filter<int32_t, int32_t> {
       typename Filter<int32_t, int32_t>::ReadFromSensorType read_from_sensor,
       uint8_t alpha);
 
-  bool Rose(int32_t threshold) { return slope_ > threshold; }
-  bool Fell(int32_t threshold) { return slope_ < (-threshold); }
+  bool Rising(int32_t threshold) { return slope_ > threshold; }
+  bool Falling(int32_t threshold) { return slope_ < (-threshold); }
   bool Stable(int32_t threshold) {
-    return !(Rose(threshold) || Fell(threshold));
+    return !(Rising(threshold) || Falling(threshold));
   }
 
   int32_t Slope() { return slope_; }

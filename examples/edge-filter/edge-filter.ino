@@ -18,9 +18,9 @@ void loop() {
 
   // Depending on the signal, these will print multiple times for each rising or
   // falling edge.
-  if (filter.Rose(kEdgeThreshold)) {
+  if (filter.Rising(kEdgeThreshold)) {
     Serial.println("Rising edge detected");
-  } else if (filter.Fell(kEdgeThreshold)) {
+  } else if (filter.Falling(kEdgeThreshold)) {
     Serial.println("Falling edge detected");
   }
 }

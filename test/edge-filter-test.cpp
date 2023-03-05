@@ -18,28 +18,28 @@ TEST(EdgeFilter, DetectsEdgesNoFilter) {
   setAnalogRead(0);
   filter.SetMillis(0);
   filter.Run();
-  EXPECT_FALSE(filter.Rose(1)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(1)) << filter.Slope();
   EXPECT_TRUE(filter.Stable(1)) << filter.Slope();
 
   setAnalogRead(2);
   filter.SetMillis(10);
   filter.Run();
-  EXPECT_TRUE(filter.Rose(1)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(1)) << filter.Slope();
+  EXPECT_TRUE(filter.Rising(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(1)) << filter.Slope();
   EXPECT_FALSE(filter.Stable(1)) << filter.Slope();
 
   setAnalogRead(0);
   filter.SetMillis(20);
   filter.Run();
-  EXPECT_FALSE(filter.Rose(1)) << filter.Slope();
-  EXPECT_TRUE(filter.Fell(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(1)) << filter.Slope();
+  EXPECT_TRUE(filter.Falling(1)) << filter.Slope();
   EXPECT_FALSE(filter.Stable(1)) << filter.Slope();
 
   filter.SetMillis(21);
   filter.Run();
-  EXPECT_FALSE(filter.Rose(1)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(1)) << filter.Slope();
   EXPECT_TRUE(filter.Stable(1)) << filter.Slope();
 }
 
@@ -49,45 +49,45 @@ TEST(EdgeFilter, StableBelowThreshold) {
   setAnalogRead(0);
   filter.SetMillis(0);
   filter.Run();
-  EXPECT_FALSE(filter.Rose(1)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(1)) << filter.Slope();
   EXPECT_TRUE(filter.Stable(1)) << filter.Slope();
 
   setAnalogRead(10);
   filter.SetMillis(10);
   filter.Run();
-  EXPECT_TRUE(filter.Rose(1)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(1)) << filter.Slope();
+  EXPECT_TRUE(filter.Rising(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(1)) << filter.Slope();
   EXPECT_FALSE(filter.Stable(1)) << filter.Slope();
 
-  EXPECT_TRUE(filter.Rose(9)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(9)) << filter.Slope();
+  EXPECT_TRUE(filter.Rising(9)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(9)) << filter.Slope();
   EXPECT_FALSE(filter.Stable(9)) << filter.Slope();
 
-  EXPECT_FALSE(filter.Rose(10)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(10)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(10)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(10)) << filter.Slope();
   EXPECT_TRUE(filter.Stable(10)) << filter.Slope();
 
-  EXPECT_FALSE(filter.Rose(256)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(256)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(256)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(256)) << filter.Slope();
   EXPECT_TRUE(filter.Stable(256)) << filter.Slope();
 
   setAnalogRead(0);
   filter.SetMillis(20);
   filter.Run();
-  EXPECT_FALSE(filter.Rose(1)) << filter.Slope();
-  EXPECT_TRUE(filter.Fell(1)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(1)) << filter.Slope();
+  EXPECT_TRUE(filter.Falling(1)) << filter.Slope();
   EXPECT_FALSE(filter.Stable(1)) << filter.Slope();
 
-  EXPECT_FALSE(filter.Rose(9)) << filter.Slope();
-  EXPECT_TRUE(filter.Fell(9)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(9)) << filter.Slope();
+  EXPECT_TRUE(filter.Falling(9)) << filter.Slope();
   EXPECT_FALSE(filter.Stable(9)) << filter.Slope();
 
-  EXPECT_FALSE(filter.Rose(10)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(10)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(10)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(10)) << filter.Slope();
   EXPECT_TRUE(filter.Stable(10)) << filter.Slope();
 
-  EXPECT_FALSE(filter.Rose(256)) << filter.Slope();
-  EXPECT_FALSE(filter.Fell(256)) << filter.Slope();
+  EXPECT_FALSE(filter.Rising(256)) << filter.Slope();
+  EXPECT_FALSE(filter.Falling(256)) << filter.Slope();
   EXPECT_TRUE(filter.Stable(256)) << filter.Slope();
 }
