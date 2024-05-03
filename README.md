@@ -24,7 +24,7 @@ An alpha of 255 means that the filter returns the current value of the input. An
 
 Keeps a buffer of recent inputs, and returns the median of those values.
 
-This filter has been written to be relatively fast, without sacrificing too much readability for speed. In the typical case (once the buffer is full), it iterate through the buffer at most once.
+This filter has been written to be relatively fast, without sacrificing too much readability for speed. In the typical case (once the buffer is full), it iterates through the buffer at most once.
 
 For even sizes, this returns the lower median.
 
