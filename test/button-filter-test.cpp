@@ -5,7 +5,6 @@
 namespace {
 
 bool digitalReadValue = false;
-int digitalRead(uint32_t pin) { return digitalReadValue; }
 
 enum class Status {
   kNone,

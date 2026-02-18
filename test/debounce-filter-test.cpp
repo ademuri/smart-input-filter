@@ -3,7 +3,6 @@
 #include "gtest/gtest.h"
 
 bool digitalReadValue = false;
-int digitalRead(uint32_t pin) { return digitalReadValue; }
 
 namespace debounce_filter_test {
 
