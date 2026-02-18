@@ -42,6 +42,11 @@ void setup() {
 
 void loop() {
   button->Run();
+
+  // Use GetRawValue to get the current (possibly bouncing) state of the button
+  // directly from the sensor.
+  bool raw_state = button->GetRawValue();
+
   if (button->Rose()) {
     Serial.println("You clicked a button!");
   }

@@ -42,6 +42,8 @@ See the `examples` directory for how to use the filters.
 
 Generally, call the `Run` function periodically. Then, call `GetFilteredValue` to get the output of the filter.
 
+You can also call `GetRawValue` to get the most recent value read from the sensor before any filtering was applied. This value is unconverted (it's the original `InputType` returned by your sensor reading function).
+
 ### Debug Logging
 
 Call `SetLogToSerial(true)` on your filter to enable debug logging. Values are logged to Serial in the form <input> <output>. These values can be graphed using the Arduino serial plotter. Both input and output are converted before logging.

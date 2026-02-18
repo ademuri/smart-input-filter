@@ -62,6 +62,9 @@ class Filter {
   // Returns the output of the filter, converted.
   OutputType GetFilteredValue() const;
 
+  // Returns the most recent raw sensor value, unconverted.
+  InputType GetRawValue() const;
+
   // Instructs the filter to run no more frequently than this delay. This can be
   // used to run the filter at a defined rate, which can make the filter more
   // consistent.
@@ -162,6 +165,11 @@ OutputType Filter<InputType, OutputType>::GetFilteredValue() const {
 }
 
 template <typename InputType, typename OutputType>
+InputType Filter<InputType, OutputType>::GetRawValue() const {
+  return sensor_value_;
+}
+
+template <typename InputType, typename OutputType>
 void Filter<InputType, OutputType>::SetMinRunInterval(
     uint32_t interval_millis) {
   min_run_interval_ = interval_millis;
@@ -178,9 +186,9 @@ void Filter<InputType, OutputType>::SetRunDelayInMillis(uint32_t delay) {
 
 template <typename InputType, typename OutputType>
 void Filter<InputType, OutputType>::LogState() {
-  Serial.print(Convert_(sensor_value_));
+  Serial.print(Convert_(GetRawValue()));
   Serial.print(" ");
-  Serial.println(Convert_(filtered_value_));
+  Serial.println(GetFilteredValue());
 }
 
 #ifndef ARDUINO
