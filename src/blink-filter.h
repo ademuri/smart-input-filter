@@ -46,7 +46,7 @@ class BlinkFilter : public Filter<bool, bool> {
   /**
    * @brief Implements the blink detection logic.
    *
-   * @return The current raw sensor value (passed through).
+   * @return true if blinking is detected, false otherwise.
    */
   bool DoRun() override;
 

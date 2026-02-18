@@ -24,5 +24,5 @@ void BlinkFilter::Reset() {
 
 bool BlinkFilter::DoRun() {
   // To be implemented in Phase 3
-  return sensor_value_;
+  return is_blinking_;
 }
