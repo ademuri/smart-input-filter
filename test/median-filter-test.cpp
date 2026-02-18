@@ -7,7 +7,7 @@
 
 unsigned int analogRead(unsigned int) { return 0; }
 
-namespace median_filter_input_test {
+namespace {
 
 TEST(MedianFilter, loading_in_order) {
   MedianFilter<uint32_t, uint32_t, 5> *input =
@@ -99,4 +99,4 @@ TEST(MedianFilter, float) {
   RunDataTest(input, data, setFloatRead);
 }
 
-}  // namespace median_filter_input_test
+}  // namespace

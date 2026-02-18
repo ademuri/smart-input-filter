@@ -2,9 +2,9 @@
 
 #include "gtest/gtest.h"
 
-bool digitalReadValue = false;
+namespace {
 
-namespace debounce_filter_test {
+bool digitalReadValue = false;
 
 enum class StateChange {
   kNone,
@@ -162,4 +162,4 @@ TEST(DebounceFilter, very_fast_change) {
   RunDataTest(filter, data);
 }
 
-}  // namespace debounce_filter_test
+}  // namespace

@@ -6,6 +6,8 @@
 #include "gtest/gtest.h"
 #include "run-data-test.h"
 
+namespace {
+
 TEST(QuantizationFilter, NoOp) {
   QuantizationFilter<uint32_t> filter(analog_read_function, /*bucket_size=*/1,
                                       /*hysteresis=*/0);
@@ -38,3 +40,5 @@ TEST(QuantizationFilter, QuantizationAndHysteresis) {
   };
   RunDataTest<uint32_t, uint32_t>(&filter, data, setAnalogRead);
 }
+
+}  // namespace

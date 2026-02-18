@@ -3,6 +3,8 @@
 #include "gtest/gtest.h"
 #include "run-data-test.h"
 
+namespace {
+
 void setAnalogReadInt32(int32_t value) { setAnalogRead(value); }
 
 TEST(EdgeFilter, EMAFiltersInput) {
@@ -91,3 +93,5 @@ TEST(EdgeFilter, StableBelowThreshold) {
   EXPECT_FALSE(filter.Falling(256)) << filter.Slope();
   EXPECT_TRUE(filter.Stable(256)) << filter.Slope();
 }
+
+}  // namespace

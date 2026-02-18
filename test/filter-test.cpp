@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "run-data-test.h"
 
-namespace filter_test {
+namespace {
 
 TEST(Filter, SetMinRunInterval_default) {
   // Filter that returns the sensor value immediately
@@ -47,4 +47,4 @@ TEST(Filter, SetMinRunInterval_updates) {
   EXPECT_EQ(input->GetFilteredValue(), 2);
 }
 
-}  // namespace filter_test
+}  // namespace
