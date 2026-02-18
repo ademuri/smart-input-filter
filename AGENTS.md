@@ -71,7 +71,7 @@ This requires `clang-format` to be installed.
 
 - **Naming:**
   - Classes: `PascalCase` (e.g., `DebounceFilter`)
-  - Methods/Variables: `camelCase` (e.g., `getFilteredValue`)
+  - Methods/Variables: `PascalCase` (e.g., `Run`)
   - Constants: `kPascalCase` (e.g., `kDebounceTimeMillis`)
 - **Headers:** Use `#ifndef` guards with the pattern `SMART_INPUT_FILTER_[FILENAME]`.
 - **Standard:** Strictly C++11 to maintain compatibility with older embedded compilers.
