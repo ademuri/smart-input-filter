@@ -7,7 +7,14 @@ const uint8_t kLedPin = 13;
 
 // DebounceFilter cleans up any noise or contact bounce on the input pin. This
 // ensures the BlinkFilter receives a clean signal.
+// Most users should use stack-allocated instances for better performance and
+// reliability.
 DebounceFilter signalDebouncer{filter_functions::ForDigitalRead<kSensorPin>()};
+
+// This library also supports dynamic allocation using 'new'. While this is
+// compiled here to ensure support, it is generally discouraged in embedded
+// environments due to the risk of heap fragmentation.
+DebounceFilter *debouncerPtr;
 
 // BlinkFilter monitors the debounced signal and determines if it's blinking at
 // the expected frequency.
@@ -26,6 +33,10 @@ void setup() {
   Serial.begin(115200);
   pinMode(kSensorPin, INPUT_PULLUP);
   pinMode(kLedPin, OUTPUT);
+
+  // Example of dynamic allocation (for compilation testing):
+  debouncerPtr =
+      new DebounceFilter(filter_functions::ForDigitalRead<kSensorPin>());
 }
 
 void loop() {

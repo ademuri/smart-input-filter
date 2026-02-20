@@ -3,7 +3,15 @@
 const uint8_t kButtonPin = 0;
 const uint8_t kLed1Pin = 13;
 const uint8_t kLed2Pin = 14;
-DebounceFilter *button;
+
+// Most users should use stack-allocated instances for better performance and
+// reliability.
+DebounceFilter button{filter_functions::ForDigitalRead<kButtonPin>()};
+
+// This library also supports dynamic allocation using 'new'. While this is
+// compiled here to ensure support, it is generally discouraged in embedded
+// environments due to the risk of heap fragmentation.
+DebounceFilter *buttonPtr;
 
 bool inverted = false;
 
@@ -17,44 +25,34 @@ bool readButtonPin() {
 
 void setup() {
   pinMode(kButtonPin, INPUT_PULLUP);
-  // Typical usage: with a normal digital input, pin number available at compile
-  // time
-  button = new DebounceFilter(filter_functions::ForDigitalRead<kButtonPin>());
-
-  // For an inverted input, e.g. when using a button with a pullup resistor
-  button = new DebounceFilter(
-      filter_functions::ForInvertedDigitalRead<kButtonPin>());
-
-  // Like the above, but with the pin determined at runtime. Not available on
-  // AVR.
-#ifndef __AVR__
-  button =
-      new DebounceFilter(filter_functions::ForDigitalReadDynamic(random(10)));
-
-  button = new DebounceFilter(
-      filter_functions::ForInvertedDigitalReadDynamic(random(10)));
-#endif  // __AVR__
-
-  // Advanced usage: custom input function
-  button = new DebounceFilter(readButtonPin);
-
   pinMode(kLed1Pin, OUTPUT);
   pinMode(kLed2Pin, OUTPUT);
+
+  // Examples of dynamic allocation (for compilation testing):
+  buttonPtr =
+      new DebounceFilter(filter_functions::ForDigitalRead<kButtonPin>());
+
+#ifndef __AVR__
+  // Dynamic pin assignment at runtime (not available on AVR)
+  delete buttonPtr;
+  buttonPtr =
+      new DebounceFilter(filter_functions::ForDigitalReadDynamic(random(10)));
+#endif
 }
 
 void loop() {
-  button->Run();
+  button.Run();
 
   // Use GetRawValue to get the current (possibly bouncing) state of the button
   // directly from the sensor.
-  digitalWrite(kLed2Pin, button->GetRawValue());
+  digitalWrite(kLed2Pin, button.GetRawValue());
 
-  if (button->Rose()) {
+  if (button.Rose()) {
     Serial.println("You clicked a button!");
   }
-  if (button->Fell()) {
+  if (button.Fell()) {
     Serial.println("You released a button!");
   }
 
-  digitalWrite(kLed1Pin, button->GetFilteredValue());
+  digitalWrite(kLed1Pin, button.GetFilteredValue());
 }
