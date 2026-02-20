@@ -12,7 +12,7 @@ Filters a digital input such as a button. Prevent spurious changes in state due 
 
 Filters an analog input using an exponential moving average filer.
 
-An exponential moving average filter. This uses only integer (32-bit) math.  This supports up to 24-bit inputs.
+An exponential moving average filter. This uses only integer math. It uses 64-bit signed integers internally, so it supports up to 55-bit inputs.
 
 An exponential moving average filter is defined as:
    average = input_value * alpha + previous_average * (1 - alpha)

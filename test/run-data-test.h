@@ -31,6 +31,10 @@ extern uint32_t analogReadValue;
 extern void setAnalogRead(uint32_t value);
 const auto analog_read_function = []() { return analogReadValue; };
 
+extern int32_t intReadValue;
+extern void setIntRead(int32_t value);
+const auto int_read_function = []() { return intReadValue; };
+
 extern float floatReadValue;
 extern void setFloatRead(float value);
 const auto float_read_function = []() { return floatReadValue; };
