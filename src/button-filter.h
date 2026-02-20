@@ -8,6 +8,12 @@ class ButtonFilter : public DebounceFilter {
   ButtonFilter(typename Filter<bool, bool>::ReadFromSensorType ReadFromSensor,
                uint16_t held_time_millis);
 
+  // Not copyable or movable
+  ButtonFilter(const ButtonFilter&) = delete;
+  ButtonFilter& operator=(const ButtonFilter&) = delete;
+  ButtonFilter(ButtonFilter&&) = delete;
+  ButtonFilter& operator=(ButtonFilter&&) = delete;
+
   // Whether the button was pressed this cycle. Rest on the next call to Run.
   // True once per button press cycle.
   bool Pressed();

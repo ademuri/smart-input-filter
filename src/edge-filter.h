@@ -13,6 +13,12 @@ class EdgeFilter : public Filter<int32_t, int32_t> {
       typename Filter<int32_t, int32_t>::ReadFromSensorType read_from_sensor,
       uint8_t alpha);
 
+  // Not copyable or movable
+  EdgeFilter(const EdgeFilter&) = delete;
+  EdgeFilter& operator=(const EdgeFilter&) = delete;
+  EdgeFilter(EdgeFilter&&) = delete;
+  EdgeFilter& operator=(EdgeFilter&&) = delete;
+
   bool Rising(int32_t threshold) { return slope_ > threshold; }
   bool Falling(int32_t threshold) { return slope_ < (-threshold); }
   bool Stable(int32_t threshold) {

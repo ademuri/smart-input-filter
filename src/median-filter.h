@@ -32,6 +32,12 @@ class MedianFilter : public Filter<InputType, OutputType> {
       typename Filter<InputType, OutputType>::ReadFromSensorType ReadFromSensor,
       OutputType (*Convert)(InputType input));
 
+  // Not copyable or movable
+  MedianFilter(const MedianFilter&) = delete;
+  MedianFilter& operator=(const MedianFilter&) = delete;
+  MedianFilter(MedianFilter&&) = delete;
+  MedianFilter& operator=(MedianFilter&&) = delete;
+
  protected:
   InputType DoRun() override;
 

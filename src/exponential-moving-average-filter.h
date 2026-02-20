@@ -25,6 +25,15 @@ class ExponentialMovingAverageFilter : public Filter<InputType, OutputType> {
       typename Filter<InputType, OutputType>::ReadFromSensorType ReadFromSensor,
       uint8_t alpha, OutputType (*Convert)(InputType input));
 
+  // Not copyable or movable
+  ExponentialMovingAverageFilter(const ExponentialMovingAverageFilter&) =
+      delete;
+  ExponentialMovingAverageFilter& operator=(
+      const ExponentialMovingAverageFilter&) = delete;
+  ExponentialMovingAverageFilter(ExponentialMovingAverageFilter&&) = delete;
+  ExponentialMovingAverageFilter& operator=(ExponentialMovingAverageFilter&&) =
+      delete;
+
   void Initialize(InputType average);
 
  protected:

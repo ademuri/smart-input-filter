@@ -14,6 +14,12 @@ class QuantizationFilter : public Filter<InputType, InputType> {
                          read_from_sensor,
                      InputType bucket_size, InputType hysteresis);
 
+  // Not copyable or movable
+  QuantizationFilter(const QuantizationFilter&) = delete;
+  QuantizationFilter& operator=(const QuantizationFilter&) = delete;
+  QuantizationFilter(QuantizationFilter&&) = delete;
+  QuantizationFilter& operator=(QuantizationFilter&&) = delete;
+
  protected:
   InputType DoRun() override;
 

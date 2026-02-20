@@ -46,14 +46,13 @@ class Filter {
   typedef std::function<InputType()> ReadFromSensorType;
 #endif
 
-  // Default constructor uses a no-op converter.
-  Filter(ReadFromSensorType ReadFromSensor)
-      : ReadFromSensor_(ReadFromSensor),
-        Convert_(Filter<InputType, OutputType>::NoOpConvert) {}
+  // Not copyable or movable
+  Filter(const Filter&) = delete;
+  Filter& operator=(const Filter&) = delete;
+  Filter(Filter&&) = delete;
+  Filter& operator=(Filter&&) = delete;
 
-  Filter(ReadFromSensorType ReadFromSensor,
-         OutputType (*Convert)(InputType input))
-      : ReadFromSensor_(ReadFromSensor), Convert_(Convert) {}
+  virtual ~Filter() = default;
 
   // Run one iteration of the filter. Call this periodically to read the sensor
   // and run the filtering logic.
@@ -85,6 +84,15 @@ class Filter {
 #endif
 
  protected:
+  // Default constructor uses a no-op converter.
+  Filter(ReadFromSensorType ReadFromSensor)
+      : ReadFromSensor_(ReadFromSensor),
+        Convert_(Filter<InputType, OutputType>::NoOpConvert) {}
+
+  Filter(ReadFromSensorType ReadFromSensor,
+         OutputType (*Convert)(InputType input))
+      : ReadFromSensor_(ReadFromSensor), Convert_(Convert) {}
+
   // This will instruct the filter to not run until at least delay milliseconds
   // have passed.
   void SetRunDelayInMillis(uint32_t delay);

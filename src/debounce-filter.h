@@ -11,6 +11,12 @@ class DebounceFilter : public Filter<bool, bool> {
   DebounceFilter(
       typename Filter<bool, bool>::ReadFromSensorType ReadFromSensor);
 
+  // Not copyable or movable
+  DebounceFilter(const DebounceFilter&) = delete;
+  DebounceFilter& operator=(const DebounceFilter&) = delete;
+  DebounceFilter(DebounceFilter&&) = delete;
+  DebounceFilter& operator=(DebounceFilter&&) = delete;
+
   // Whether the input rose this cycle. Reset on the next call to Run.
   bool Rose();
 

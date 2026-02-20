@@ -32,6 +32,12 @@ class BlinkFilter : public Filter<bool, bool> {
               uint32_t expectedPeriodMs, uint8_t toleranceFraction,
               uint16_t lookbackPeriods);
 
+  // Not copyable or movable
+  BlinkFilter(const BlinkFilter&) = delete;
+  BlinkFilter& operator=(const BlinkFilter&) = delete;
+  BlinkFilter(BlinkFilter&&) = delete;
+  BlinkFilter& operator=(BlinkFilter&&) = delete;
+
   /**
    * @brief Returns true if the input is currently detected as blinking.
    *
