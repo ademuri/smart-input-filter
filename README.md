@@ -28,6 +28,14 @@ This filter has been written to be relatively fast, without sacrificing too much
 
 For even sizes, this returns the lower median.
 
+### BlinkFilter
+
+Detects if a digital input is toggling (blinking) at a specific frequency.
+
+A blinking state is confirmed when a specified number of consecutive half-cycles (transitions) fall within the expected duration (period / 2) ± tolerance.
+
+For hardware signals that may be noisy or have contact bounce, it is recommended to chain this with a `DebounceFilter`. See the `blink-filter` example for how to do this.
+
 ## Installation
 
 If you're using PlatformIO, add `ademuri/smart-input-filter@^0.3.1` to your `lib_deps`.
