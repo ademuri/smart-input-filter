@@ -1,7 +1,8 @@
 #include "debounce-filter.h"
 
 const uint8_t kButtonPin = 0;
-const uint8_t kLedPin = 13;
+const uint8_t kLed1Pin = 13;
+const uint8_t kLed2Pin = 14;
 DebounceFilter *button;
 
 bool inverted = false;
@@ -37,7 +38,8 @@ void setup() {
   // Advanced usage: custom input function
   button = new DebounceFilter(readButtonPin);
 
-  pinMode(kLedPin, OUTPUT);
+  pinMode(kLed1Pin, OUTPUT);
+  pinMode(kLed2Pin, OUTPUT);
 }
 
 void loop() {
@@ -45,7 +47,7 @@ void loop() {
 
   // Use GetRawValue to get the current (possibly bouncing) state of the button
   // directly from the sensor.
-  bool raw_state = button->GetRawValue();
+  digitalWrite(kLed2Pin, button->GetRawValue());
 
   if (button->Rose()) {
     Serial.println("You clicked a button!");
@@ -54,5 +56,5 @@ void loop() {
     Serial.println("You released a button!");
   }
 
-  digitalWrite(kLedPin, button->GetFilteredValue());
+  digitalWrite(kLed1Pin, button->GetFilteredValue());
 }
