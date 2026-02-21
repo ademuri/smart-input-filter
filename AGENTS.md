@@ -9,7 +9,7 @@
 - **Language:** C++ (C++11 standard).
 - **Frameworks:** Arduino (primary target), PlatformIO (build system).
 - **Testing:** Google Test (gtest) and Google Mock (gmock) for unit testing.
-- **Build Tools:** CMake (for native tests), Shell scripts (for automation).
+- **Build Tools:** PlatformIO (for native tests and Arduino builds), Shell scripts (for automation).
 
 ### Supported Filters
 
@@ -24,13 +24,11 @@
 
 ### Unit Tests
 
-The project uses Google Test for unit testing, which runs natively on your development machine.
+The project uses Google Test for unit testing, which runs natively on your development machine via PlatformIO's native platform.
 
 ```bash
-./test.sh
+platformio test -e native
 ```
-
-This script creates a `build/` directory, runs CMake, compiles the tests, and executes them.
 
 ### Arduino Build Verification
 
