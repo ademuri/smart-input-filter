@@ -27,7 +27,7 @@ BlinkFilter blinkDetector{[]() {
                           },
                           /*expectedPeriodMs=*/1000,
                           /*toleranceFraction=*/25,
-                          /*lookbaclPeriods=*/4};
+                          /*lookbackPeriods=*/4};
 
 void setup() {
   Serial.begin(115200);
