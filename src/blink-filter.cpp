@@ -11,10 +11,7 @@ BlinkFilter::BlinkFilter(
   Reset();
 }
 
-bool BlinkFilter::IsBlinking() const { return is_blinking_; }
-
 void BlinkFilter::Reset() {
-  is_blinking_ = false;
   first_run_ = true;
   has_start_time_ = false;
   consecutive_half_cycles_ = 0;
@@ -29,12 +26,13 @@ bool BlinkFilter::DoRun() {
   if (first_run_) {
     last_input_state_ = current_input;
     first_run_ = false;
-    return is_blinking_;
+    return false;
   }
 
   uint32_t expected_half_period = expected_period_ms_ / 2;
   uint32_t tolerance = (expected_half_period * tolerance_fraction_) / 255;
 
+  bool is_blinking;
   if (current_input != last_input_state_) {
     if (has_start_time_) {
       uint32_t duration = current_time - last_transition_time_ms_;
@@ -43,11 +41,11 @@ bool BlinkFilter::DoRun() {
           duration <= (expected_half_period + tolerance)) {
         consecutive_half_cycles_++;
         if (consecutive_half_cycles_ >= lookback_periods_) {
-          is_blinking_ = true;
+          is_blinking = true;
         }
       } else {
         consecutive_half_cycles_ = 0;
-        is_blinking_ = false;
+        is_blinking = false;
       }
     }
     last_transition_time_ms_ = current_time;
@@ -59,11 +57,11 @@ bool BlinkFilter::DoRun() {
       uint32_t current_duration = current_time - last_transition_time_ms_;
       if (current_duration > (expected_half_period + tolerance)) {
         consecutive_half_cycles_ = 0;
-        is_blinking_ = false;
+        is_blinking = false;
         has_start_time_ = false;
       }
     }
   }
 
-  return is_blinking_;
+  return is_blinking;
 }

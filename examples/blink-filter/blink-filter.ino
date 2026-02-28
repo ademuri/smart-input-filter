@@ -46,7 +46,7 @@ void loop() {
   blinkDetector.Run();
 
   // Get the detection state.
-  if (blinkDetector.IsBlinking()) {
+  if (blinkDetector.GetFilteredValue()) {
     digitalWrite(kLedPin, HIGH);
   } else {
     digitalWrite(kLedPin, LOW);
@@ -58,7 +58,7 @@ void loop() {
     Serial.print("Raw: ");
     Serial.print(blinkDetector.GetRawValue());
     Serial.print(" | Blinking: ");
-    Serial.println(blinkDetector.IsBlinking() ? "YES" : "NO");
+    Serial.println(blinkDetector.GetFilteredValue() ? "YES" : "NO");
     lastPrint = millis();
   }
 }
