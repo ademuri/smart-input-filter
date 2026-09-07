@@ -68,8 +68,7 @@ void RunDataTest(ButtonFilter* filter, std::vector<InputOutput>& data,
 }
 
 TEST(ButtonFilter, PressedShort) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
   std::vector<InputOutput> data = {
       // clang-format off
     {0,  1000, Status::kNone},
@@ -79,12 +78,11 @@ TEST(ButtonFilter, PressedShort) {
     {0,  100, Status::kNone},
       // clang-format on
   };
-  RunDataTest(filter, data);
+  RunDataTest(&filter, data);
 }
 
 TEST(ButtonFilter, PressedLong) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
   std::vector<InputOutput> data = {
       // clang-format off
     {0,  1000, Status::kNone},
@@ -93,12 +91,11 @@ TEST(ButtonFilter, PressedLong) {
     {0,  100, Status::kNone},
       // clang-format on
   };
-  RunDataTest(filter, data);
+  RunDataTest(&filter, data);
 }
 
 TEST(ButtonFilter, HeldShort) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
   std::vector<InputOutput> data = {
       // clang-format off
     {0,  1000, Status::kNone},
@@ -107,12 +104,11 @@ TEST(ButtonFilter, HeldShort) {
     {0,  100, Status::kNone},
       // clang-format on
   };
-  RunDataTest(filter, data);
+  RunDataTest(&filter, data);
 }
 
 TEST(ButtonFilter, HeldLong) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
   std::vector<InputOutput> data = {
       // clang-format off
     {0,  1000, Status::kNone},
@@ -121,12 +117,11 @@ TEST(ButtonFilter, HeldLong) {
     {0,  1000, Status::kNone},
       // clang-format on
   };
-  RunDataTest(filter, data);
+  RunDataTest(&filter, data);
 }
 
 TEST(ButtonFilter, PressedThenHeld) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
   std::vector<InputOutput> data = {
       // clang-format off
     {0,  1000, Status::kNone},
@@ -138,24 +133,22 @@ TEST(ButtonFilter, PressedThenHeld) {
     {0,  100, Status::kNone},
       // clang-format on
   };
-  RunDataTest(filter, data);
+  RunDataTest(&filter, data);
 }
 
 TEST(ButtonFilter, HeldThenPressed) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
   std::vector<InputOutput> data = {
       {0, 1000, Status::kNone}, {1, 100, Status::kNone}, {1, 1, Status::kHeld},
       {1, 899, Status::kNone},  {0, 10, Status::kNone},  {1, 10, Status::kNone},
       {0, 1, Status::kPressed}, {0, 100, Status::kNone},
   };
-  RunDataTest(filter, data);
+  RunDataTest(&filter, data);
 }
 
 TEST(ButtonFilter, Repeat) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
-  filter->SetRepeatDelay(200);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
+  filter.SetRepeatDelay(200);
   std::vector<InputOutput> data = {
       // clang-format off
     {0, 1000, Status::kNone},
@@ -175,13 +168,12 @@ TEST(ButtonFilter, Repeat) {
     {1, 200, Status::kNone},
     {1, 1, Status::kRepeated},
   };
-  RunDataTest(filter, data);
+  RunDataTest(&filter, data);
 }
 
 TEST(ButtonFilter, RepeatChangeWhileHeld) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
-  filter->SetRepeatDelay(200);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
+  filter.SetRepeatDelay(200);
   std::vector<InputOutput> first_data = {
     // clang-format off
     {0, 1000, Status::kNone},
@@ -191,9 +183,9 @@ TEST(ButtonFilter, RepeatChangeWhileHeld) {
     {1, 1, Status::kRepeated},
       // clang-format on
   };
-  RunDataTest(filter, first_data);
+  RunDataTest(&filter, first_data);
 
-  filter->SetRepeatDelay(300);
+  filter.SetRepeatDelay(300);
   std::vector<InputOutput> second_data = {
       // clang-format off
     {1, 300, Status::kNone},
@@ -205,13 +197,12 @@ TEST(ButtonFilter, RepeatChangeWhileHeld) {
     {0, 1000, Status::kNone},
       // clang-format on
   };
-  RunDataTest(filter, second_data, /*starting_millis=*/1302);
+  RunDataTest(&filter, second_data, /*starting_millis=*/1302);
 }
 
 TEST(ButtonFilter, RepeatEnableThenDisable) {
-  ButtonFilter* filter =
-      new ButtonFilter(fakeDigitalRead, /*held_time_millis=*/100);
-  filter->SetRepeatDelay(200);
+  ButtonFilter filter(fakeDigitalRead, /*held_time_millis=*/100);
+  filter.SetRepeatDelay(200);
   std::vector<InputOutput> first_data = {
       // clang-format off
     {0, 1000, Status::kNone},
@@ -221,16 +212,16 @@ TEST(ButtonFilter, RepeatEnableThenDisable) {
     {1, 1, Status::kRepeated},
       // clang-format on
   };
-  RunDataTest(filter, first_data);
+  RunDataTest(&filter, first_data);
 
-  filter->SetRepeatDelay(0);
+  filter.SetRepeatDelay(0);
   std::vector<InputOutput> second_data = {
       // clang-format off
     {1, 1000, Status::kNone},
     {0, 1000, Status::kNone},
       // clang-format on
   };
-  RunDataTest(filter, second_data, /*starting_millis=*/1302);
+  RunDataTest(&filter, second_data, /*starting_millis=*/1302);
 }
 
 }  // namespace
