@@ -18,15 +18,15 @@
 #include <ArduinoSTL.h>
 #endif
 
-#else
+#else  // ifdef ARDUINO
 #include <cstdint>
 #include <iostream>
 #include <vector>
 
-// Arduino functions
-extern int digitalRead(uint32_t pin);
-extern uint32_t analogRead(uint32_t pin);
-#endif
+// From ArduinoCore-API-STM32. Provides Arduino types and functions (e.g.
+// digitalRead()).
+#include <api/Common.h>
+#endif  // ifdef ARDUINO
 
 #include <functional>
 
