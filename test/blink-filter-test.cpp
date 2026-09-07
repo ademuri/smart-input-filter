@@ -43,15 +43,15 @@ TEST(BlinkFilter, PerfectBlinking) {
   EXPECT_FALSE(filter.GetFilteredValue());
   uint32_t currentTimeMs = 0;
 
-  SimulateSignal(filter, true, 500, currentTimeMs);   // Init
+  SimulateSignal(filter, true, 500, currentTimeMs);  // Init
   EXPECT_FALSE(filter.GetFilteredValue());
   SimulateSignal(filter, false, 500, currentTimeMs);  // Trans 1
   EXPECT_FALSE(filter.GetFilteredValue());
-  SimulateSignal(filter, true, 500, currentTimeMs);   // Trans 2 (cons=1)
+  SimulateSignal(filter, true, 500, currentTimeMs);  // Trans 2 (cons=1)
   EXPECT_FALSE(filter.GetFilteredValue());
   SimulateSignal(filter, false, 500, currentTimeMs);  // Trans 3 (cons=2)
   EXPECT_FALSE(filter.GetFilteredValue());
-  SimulateSignal(filter, true, 500, currentTimeMs);   // Trans 4 (cons=3)
+  SimulateSignal(filter, true, 500, currentTimeMs);  // Trans 4 (cons=3)
   EXPECT_FALSE(filter.GetFilteredValue());
   SimulateSignal(filter, false, 500, currentTimeMs);  // Trans 5 (cons=4) -> YES
   EXPECT_TRUE(filter.GetFilteredValue());
@@ -85,11 +85,11 @@ TEST(BlinkFilter, RecoveryAfterBadHalfCycle) {
   BlinkFilter filter(fakeDigitalRead, 1000, 25, 2);
   uint32_t currentTimeMs = 0;
 
-  SimulateSignal(filter, true, 500, currentTimeMs);   // Init
+  SimulateSignal(filter, true, 500, currentTimeMs);  // Init
   EXPECT_FALSE(filter.GetFilteredValue());
   SimulateSignal(filter, false, 500, currentTimeMs);  // Trans 1 (starts timer)
   EXPECT_FALSE(filter.GetFilteredValue());
-  SimulateSignal(filter, true, 500, currentTimeMs);   // Trans 2 (cons=1)
+  SimulateSignal(filter, true, 500, currentTimeMs);  // Trans 2 (cons=1)
   EXPECT_FALSE(filter.GetFilteredValue());
   SimulateSignal(filter, false, 500, currentTimeMs);  // Trans 3 (cons=2) -> YES
   EXPECT_TRUE(filter.GetFilteredValue());
@@ -99,11 +99,11 @@ TEST(BlinkFilter, RecoveryAfterBadHalfCycle) {
   EXPECT_FALSE(filter.GetFilteredValue());
 
   // Recover
-  SimulateSignal(filter, true, 500, currentTimeMs);   // Trans 1 (starts timer)
+  SimulateSignal(filter, true, 500, currentTimeMs);  // Trans 1 (starts timer)
   EXPECT_FALSE(filter.GetFilteredValue());
   SimulateSignal(filter, false, 500, currentTimeMs);  // Trans 2 (cons=1)
   EXPECT_FALSE(filter.GetFilteredValue());
-  SimulateSignal(filter, true, 500, currentTimeMs);   // Trans 3 (cons=2) -> YES
+  SimulateSignal(filter, true, 500, currentTimeMs);  // Trans 3 (cons=2) -> YES
   EXPECT_TRUE(filter.GetFilteredValue());
 
   // Bad cycle: too short (100ms)
@@ -132,7 +132,7 @@ TEST(BlinkFilter, ResetFunctionality) {
   EXPECT_FALSE(filter.GetFilteredValue());
   SimulateSignal(filter, false, 500, currentTimeMs);  // Trans 2 (starts timer)
   EXPECT_FALSE(filter.GetFilteredValue());
-  SimulateSignal(filter, true, 500, currentTimeMs);   // Trans 3 (cons=1)
+  SimulateSignal(filter, true, 500, currentTimeMs);  // Trans 3 (cons=1)
   EXPECT_FALSE(filter.GetFilteredValue());
   SimulateSignal(filter, false, 500, currentTimeMs);  // Trans 4 (cons=2) -> YES
   EXPECT_TRUE(filter.GetFilteredValue());

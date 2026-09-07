@@ -16,7 +16,7 @@ ExponentialMovingAverageFilter<int32_t> signedFilter{
 // This library also supports dynamic allocation using 'new'. While this is
 // compiled here to ensure support, it is generally discouraged in embedded
 // environments due to the risk of heap fragmentation.
-ExponentialMovingAverageFilter<uint32_t> *unsignedFilterPtr;
+ExponentialMovingAverageFilter<uint32_t>* unsignedFilterPtr;
 
 void setup() {
   pinMode(kInputPin, INPUT_PULLUP);

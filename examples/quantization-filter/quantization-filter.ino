@@ -12,7 +12,7 @@ QuantizationFilter<uint32_t> filter(
 // This library also supports dynamic allocation using 'new'. While this is
 // compiled here to ensure support, it is generally discouraged in embedded
 // environments due to the risk of heap fragmentation.
-QuantizationFilter<uint32_t> *filterPtr;
+QuantizationFilter<uint32_t>* filterPtr;
 
 void setup() {
   pinMode(kInputPin, INPUT);

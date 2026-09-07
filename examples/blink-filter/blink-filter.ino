@@ -14,7 +14,7 @@ DebounceFilter signalDebouncer{filter_functions::ForDigitalRead<kSensorPin>()};
 // This library also supports dynamic allocation using 'new'. While this is
 // compiled here to ensure support, it is generally discouraged in embedded
 // environments due to the risk of heap fragmentation.
-DebounceFilter *debouncerPtr;
+DebounceFilter* debouncerPtr;
 
 // BlinkFilter monitors the debounced signal and determines if it's blinking at
 // the expected frequency.

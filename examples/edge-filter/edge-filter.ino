@@ -11,7 +11,7 @@ EdgeFilter filter(filter_functions::ForAnalogRead<kInputPin>(), /*alpha=*/191);
 // This library also supports dynamic allocation using 'new'. While this is
 // compiled here to ensure support, it is generally discouraged in embedded
 // environments due to the risk of heap fragmentation.
-EdgeFilter *filterPtr;
+EdgeFilter* filterPtr;
 
 void setup() {
   Serial.begin(115200);
