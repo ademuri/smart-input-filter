@@ -32,7 +32,7 @@ class BlinkFilter : public Filter<bool, bool> {
   BlinkFilter& operator=(BlinkFilter&&) = delete;
 
   // Reset the filter's internal state.
-  void Reset();
+  void Reset() override;
 
  protected:
   // Returns true if the input is blinking, false otherwise.
@@ -43,6 +43,7 @@ class BlinkFilter : public Filter<bool, bool> {
   uint8_t tolerance_fraction_;
   uint16_t lookback_periods_;
 
+  bool is_blinking_ = false;
   bool first_run_ = true;
   bool has_start_time_ = false;
   uint16_t consecutive_half_cycles_ = 0;

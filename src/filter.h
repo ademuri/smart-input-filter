@@ -58,6 +58,9 @@ class Filter {
   // and run the filtering logic.
   void Run();
 
+  // Reset the filter's internal state.
+  virtual void Reset();
+
   // Returns the output of the filter, converted.
   OutputType GetFilteredValue() const;
 
@@ -115,6 +118,9 @@ class Filter {
   // iteration of Run only reads from the sensor once.
   InputType sensor_value_ = 0;
 
+  // Cached filtered value of the sensor. Set in Run.
+  InputType filtered_value_ = 0;
+
   // Test functions
 #ifndef ARDUINO
   uint32_t millis();
@@ -123,7 +129,6 @@ class Filter {
  private:
   static OutputType NoOpConvert(InputType input);
 
-  InputType filtered_value_ = 0;
   uint32_t min_run_interval_ = 0;
   uint32_t run_at_ = 0;
   bool log_to_serial_ = false;
@@ -160,6 +165,11 @@ void Filter<InputType, OutputType>::Run() {
     // Note: if min_run_interval_ is 0 (default), this will have no effect
     SetRunDelayInMillis(min_run_interval_);
   }
+}
+
+template <typename InputType, typename OutputType>
+void Filter<InputType, OutputType>::Reset() {
+  filtered_value_ = 0;
 }
 
 template <typename InputType, typename OutputType>
